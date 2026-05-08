@@ -2,9 +2,15 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "bridgewatch-ai",
-      "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd bridgewatch-ai && npm run dev"],
+      "name": "backend",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd backend && python run.py"],
+      "port": 8000
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd bridgewatch-ai && npm run dev"],
       "port": 5173
     }
   ]

@@ -13,6 +13,13 @@ class IDGenerator:
         cls._counters[key] = cls._counters.get(key, 0) + 1
         return f"{prefix}-{today}-{cls._counters[key]:03d}"
 
+    @classmethod
+    def generate_unique(cls, prefix: str = "ID") -> str:
+        """Generate an ID with current timestamp to avoid cross-process collisions."""
+        import secrets
+        now = datetime.now()
+        return f"{prefix}-{now.strftime('%Y%m%d')}-{now.strftime('%H%M%S')}-{secrets.token_hex(2)}"
+
 
 def generate_event_id() -> str:
     return IDGenerator.generate("EVT")
@@ -23,7 +30,7 @@ def generate_video_id() -> str:
 
 
 def generate_task_id() -> str:
-    return IDGenerator.generate("TASK")
+    return IDGenerator.generate_unique("TASK")
 
 
 def generate_model_id() -> str:
