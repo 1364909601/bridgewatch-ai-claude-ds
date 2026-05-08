@@ -1,0 +1,117 @@
+{
+  "description": "模拟后端 API 完整响应示例 — 覆盖全部 16 个端点",
+  "version": "1.0",
+  "generatedAt": "2026-05-08T14:00:00+08:00",
+  "endpoints": {
+    "health": {
+      "method": "GET",
+      "path": "/api/health",
+      "response": {
+        "code": 0,
+        "message": "success",
+        "data": { "status": "ok", "version": "0.1.0", "app_name": "BridgeWatch AI" },
+        "timestamp": "2026-05-08T14:00:00+08:00"
+      }
+    },
+    "objects": {
+      "method": "GET",
+      "path": "/api/objects",
+      "response": {
+        "code": 0,
+        "message": "success",
+        "data": [
+          { "object_id": "OBJ-001", "object_name": "长江大桥", "object_type": "bridge", "location_desc": "长江流域主干道", "status": "active" },
+          { "object_id": "OBJ-002", "object_name": "黄河大桥", "object_type": "bridge", "location_desc": "黄河流域主干道", "status": "active" },
+          { "object_id": "OBJ-003", "object_name": "跨海大桥", "object_type": "bridge", "location_desc": "东部沿海跨海通道", "status": "active" },
+          { "object_id": "OBJ-004", "object_name": "南山隧道", "object_type": "tunnel", "location_desc": "南部山区高速公路", "status": "active" },
+          { "object_id": "OBJ-005", "object_name": "穿山隧道", "object_type": "tunnel", "location_desc": "西部山区高速公路", "status": "active" }
+        ],
+        "timestamp": "2026-05-08T14:00:00+08:00"
+      }
+    },
+    "dashboard_summary": {
+      "method": "GET",
+      "path": "/api/dashboard/summary",
+      "response": {
+        "code": 0,
+        "message": "success",
+        "data": { "total": 22, "high_risk": 3, "bridges": 18, "tunnels": 10 },
+        "timestamp": "2026-05-08T14:00:00+08:00"
+      }
+    },
+    "dashboard_trend": {
+      "method": "GET",
+      "path": "/api/dashboard/trend?days=7",
+      "response": {
+        "code": 0,
+        "message": "success",
+        "data": [
+          { "date": "2026-05-02", "count": 5, "high_risk": 2 },
+          { "date": "2026-05-03", "count": 7, "high_risk": 1 },
+          { "date": "2026-05-04", "count": 4, "high_risk": 0 },
+          { "date": "2026-05-05", "count": 6, "high_risk": 2 },
+          { "date": "2026-05-06", "count": 8, "high_risk": 3 },
+          { "date": "2026-05-07", "count": 3, "high_risk": 1 },
+          { "date": "2026-05-08", "count": 2, "high_risk": 0 }
+        ],
+        "timestamp": "2026-05-08T14:00:00+08:00"
+      }
+    },
+    "events_list": {
+      "method": "GET",
+      "path": "/api/events?page_no=1&page_size=20",
+      "response": {
+        "code": 0,
+        "message": "success",
+        "data": {
+          "total": 8,
+          "page_no": 1,
+          "page_size": 20,
+          "list": [
+            { "event_id": "EVT-001", "object_id": "OBJ-001", "video_id": "VID-001", "event_type": "collapse", "risk_level": "high", "scene_type": "day", "event_time": "2026-05-02T05:30:00", "start_second": 120, "end_second": 180, "thumbnail_url": null, "result_desc": "检测到桥梁中部结构异常位移", "review_status": "pending", "review_remark": null },
+            { "event_id": "EVT-002", "object_id": "OBJ-001", "video_id": "VID-001", "event_type": "deformation", "risk_level": "medium", "scene_type": "day", "event_time": "2026-05-02T07:30:00", "start_second": 300, "end_second": 420, "thumbnail_url": null, "result_desc": "桥面出现不均匀沉降迹象", "review_status": "pending", "review_remark": null },
+            { "event_id": "EVT-003", "object_id": "OBJ-001", "video_id": "VID-002", "event_type": "congestion", "risk_level": "medium", "scene_type": "day", "event_time": "2026-05-03T05:30:00", "start_second": 30, "end_second": 600, "thumbnail_url": null, "result_desc": "车辆拥堵长度超过阈值", "review_status": "pending", "review_remark": null },
+            { "event_id": "EVT-004", "object_id": "OBJ-001", "video_id": "VID-002", "event_type": "fire", "risk_level": "high", "scene_type": "day", "event_time": "2026-05-03T06:30:00", "start_second": 450, "end_second": 510, "thumbnail_url": null, "result_desc": "桥面中部检测到明火", "review_status": "pending", "review_remark": null }
+          ]
+        },
+        "timestamp": "2026-05-08T14:00:00+08:00"
+      }
+    },
+    "bridge_summary": {
+      "method": "GET",
+      "path": "/api/topics/bridge/summary",
+      "response": {
+        "code": 0,
+        "message": "success",
+        "data": {
+          "event_type_stats": [
+            { "event_type": "collapse", "event_type_name": "桥梁坍塌", "count": 4 },
+            { "event_type": "deformation", "event_type_name": "桥面大变形", "count": 5 },
+            { "event_type": "congestion", "event_type_name": "车辆积压", "count": 6 },
+            { "event_type": "fire", "event_type_name": "桥面火灾", "count": 3 }
+          ],
+          "scene_stats": [
+            { "scene_type": "day", "count": 10 },
+            { "scene_type": "night", "count": 5 },
+            { "scene_type": "rain_fog", "count": 3 }
+          ]
+        },
+        "timestamp": "2026-05-08T14:00:00+08:00"
+      }
+    },
+    "ship_collision_fusion": {
+      "method": "GET",
+      "path": "/api/topics/ship-collision/fusion?object_id=OBJ-003",
+      "response": {
+        "code": 0,
+        "message": "success",
+        "data": [
+          { "fusion_id": "FUS-001", "score": 92.0, "risk_level": "high", "rule_desc": "AIS接近度 + 视频距离 + 应变峰值 + 振动能量", "fusion_time": "2026-05-08T14:30:00+08:00", "related_event_id": "EVT-002" },
+          { "fusion_id": "FUS-002", "score": 75.5, "risk_level": "medium", "rule_desc": "AIS接近度 + 视频距离", "fusion_time": "2026-05-08T13:00:00+08:00", "related_event_id": null },
+          { "fusion_id": "FUS-003", "score": 45.0, "risk_level": "low", "rule_desc": "例行监测，无显著异常", "fusion_time": "2026-05-08T12:00:00+08:00", "related_event_id": null }
+        ],
+        "timestamp": "2026-05-08T14:00:00+08:00"
+      }
+    }
+  }
+}

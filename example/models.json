@@ -1,0 +1,28 @@
+{
+  "description": "示例模型运维数据 — 驱动 ModelOpsPage 的模型版本与任务执行面板",
+  "version": "1.0",
+  "modelVersions": [
+    { "name": "BridgeWatch Vision", "version": "v1.4.2", "scope": "普通桥梁四类事件", "status": "在线", "updatedAt": "14:20:13" },
+    { "name": "Ship Collision Fusion", "version": "v0.8.6", "scope": "船撞融合原型", "status": "验证中", "updatedAt": "14:12:50" },
+    { "name": "Tunnel Guard", "version": "v0.6.1", "scope": "隧道融合原型", "status": "候选", "updatedAt": "13:58:31" },
+    { "name": "DeepLabV3+ Segmenter", "version": "v2.1.0", "scope": "桥面裂缝语义分割", "status": "在线", "updatedAt": "14:05:22" },
+    { "name": "YOLOv8 Detector", "version": "v3.0.2", "scope": "车辆/船只/烟雾目标检测", "status": "在线", "updatedAt": "13:50:44" }
+  ],
+  "taskRuns": [
+    { "name": "UAV 批量推理", "status": "运行中", "progress": 74, "startedAt": "14:28", "eta": "14:36" },
+    { "name": "夜雨样本重评", "status": "排队中", "progress": 18, "startedAt": "14:29", "eta": "14:42" },
+    { "name": "SHM 数据对齐", "status": "成功", "progress": 100, "startedAt": "14:10", "eta": "已完成" },
+    { "name": "隧道联动回放", "status": "失败", "progress": 100, "startedAt": "13:48", "eta": "需要重试" },
+    { "name": "全桥定期巡检", "status": "成功", "progress": 100, "startedAt": "13:00", "eta": "已完成" },
+    { "name": "夜间火灾重检测", "status": "排队中", "progress": 0, "startedAt": "14:32", "eta": "14:50" }
+  ],
+  "apiModels": [
+    { "model_id": "MOD-001", "model_name": "BridgeWatch Vision", "model_type": "vision", "model_version": "1.4.2", "status": "active" },
+    { "model_id": "MOD-002", "model_name": "Ship Collision Fusion", "model_type": "fusion", "model_version": "0.8.6", "status": "active" },
+    { "model_id": "MOD-003", "model_name": "Tunnel Guard", "model_type": "tunnel", "model_version": "0.6.1", "status": "inactive" }
+  ],
+  "apiTasks": [
+    { "task_id": "TASK-001", "video_id": "VID-001", "model_id": "MOD-001", "task_name": "推理任务-BridgeWatch Vision", "task_status": "success", "start_time": "2026-05-03T14:00:00", "end_time": "2026-05-03T16:00:00", "result_summary": "检测到 2 个事件" },
+    { "task_id": "TASK-002", "video_id": "VID-001", "model_id": "MOD-001", "task_name": "批量推理-BridgeWatch Vision", "task_status": "running", "start_time": "2026-05-08T13:30:00", "end_time": null, "result_summary": null }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "description": "示例总览看板数据 — 驱动 OverviewPage 的指标卡片、趋势图、分布图",
+  "version": "1.0",
+  "generatedAt": "2026-05-08T14:00:00+08:00",
+  "overviewMetrics": [
+    { "id": "high", "label": "高风险事件", "value": "3", "hint": "需要立即复核", "tone": "danger" },
+    { "id": "medium", "label": "中风险事件", "value": "7", "hint": "需要持续关注", "tone": "warning" },
+    { "id": "low", "label": "低风险事件", "value": "12", "hint": "维持自动巡检", "tone": "low" },
+    { "id": "monitored", "label": "监测对象", "value": "28", "hint": "桥梁与隧道总数", "tone": "info" }
+  ],
+  "systemStats": [
+    { "label": "传感器在线率", "value": "96.8%", "status": "正常" },
+    { "label": "视频设备在线率", "value": "94.2%", "status": "正常" },
+    { "label": "数据采集率", "value": "98.1%", "status": "正常" },
+    { "label": "AI 分析稳定度", "value": "92.7%", "status": "稳定" }
+  ],
+  "trendSeries": [
+    { "label": "14:28", "incidents": 3, "strainIndex": 62, "anomalies": 2 },
+    { "label": "14:29", "incidents": 4, "strainIndex": 66, "anomalies": 2 },
+    { "label": "14:30", "incidents": 6, "strainIndex": 71, "anomalies": 3 },
+    { "label": "14:31", "incidents": 5, "strainIndex": 68, "anomalies": 2 },
+    { "label": "14:32", "incidents": 7, "strainIndex": 78, "anomalies": 4 }
+  ],
+  "loadSeries": [
+    { "zone": "西锚碇", "load": 2156, "vibration": 42 },
+    { "zone": "主塔", "load": 2456, "vibration": 58 },
+    { "zone": "东主塔", "load": 2089, "vibration": 44 },
+    { "zone": "东锚碇", "load": 1845, "vibration": 31 }
+  ],
+  "videoFeeds": [
+    { "name": "南京长江大桥 #B-001", "state": "稳定", "tone": "ok" },
+    { "name": "杭州湾跨海大桥 #B-023", "state": "形变关注", "tone": "warning" },
+    { "name": "厦门演武大桥 #B-008", "state": "火情复核", "tone": "danger" },
+    { "name": "海沧隧道 #T-009", "state": "低能见度", "tone": "low" }
+  ],
+  "apiSummary": {
+    "total": 22,
+    "high_risk": 3,
+    "bridges": 18,
+    "tunnels": 10
+  },
+  "apiTrend": [
+    { "date": "2026-05-02", "count": 5, "high_risk": 2 },
+    { "date": "2026-05-03", "count": 7, "high_risk": 1 },
+    { "date": "2026-05-04", "count": 4, "high_risk": 0 },
+    { "date": "2026-05-05", "count": 6, "high_risk": 2 },
+    { "date": "2026-05-06", "count": 8, "high_risk": 3 },
+    { "date": "2026-05-07", "count": 3, "high_risk": 1 },
+    { "date": "2026-05-08", "count": 2, "high_risk": 0 }
+  ],
+  "apiDistribution": [
+    { "event_type": "collapse", "event_type_name": "桥梁坍塌", "count": 4 },
+    { "event_type": "deformation", "event_type_name": "桥面大变形", "count": 5 },
+    { "event_type": "congestion", "event_type_name": "车辆积压", "count": 6 },
+    { "event_type": "fire", "event_type_name": "桥面火灾", "count": 3 },
+    { "event_type": "ship_collision", "event_type_name": "船舶碰撞", "count": 2 },
+    { "event_type": "smoke", "event_type_name": "烟雾预警", "count": 1 },
+    { "event_type": "parking", "event_type_name": "异常停车", "count": 1 }
+  ]
+}

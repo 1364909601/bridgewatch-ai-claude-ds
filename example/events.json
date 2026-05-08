@@ -1,0 +1,164 @@
+{
+  "description": "示例事件数据 — 覆盖全部页面的事件展示、筛选、回放功能",
+  "version": "1.0",
+  "generatedAt": "2026-05-08T14:00:00+08:00",
+  "events": [
+    {
+      "id": "EV-001",
+      "objectName": "南京长江大桥 #B-001",
+      "objectType": "长大桥梁",
+      "title": "桥体坍塌风险",
+      "type": "坍塌风险",
+      "riskLevel": "高",
+      "confidence": 97,
+      "scene": "白天",
+      "time": "14:31:45",
+      "camera": "UAV-03",
+      "clipRange": "02:11 - 02:28",
+      "status": "待复核",
+      "sensorSignal": "结构挠度异常，应变峰值上升 18%",
+      "description": "桥面局部几何形态发生突变，视频识别与 SHM 应变曲线同时触发高风险阈值。需立即安排人工复核。",
+      "overlays": [
+        { "id": "o1", "label": "桥面异常", "left": 37, "top": 42, "width": 24, "height": 14 }
+      ]
+    },
+    {
+      "id": "EV-023",
+      "objectName": "杭州湾跨海大桥 #B-023",
+      "objectType": "长大桥梁",
+      "title": "桥面变形异常",
+      "type": "桥面变形",
+      "riskLevel": "中",
+      "confidence": 91,
+      "scene": "雨雾",
+      "time": "14:30:22",
+      "camera": "UAV-08",
+      "clipRange": "01:06 - 01:24",
+      "status": "待复核",
+      "sensorSignal": "轮廓偏移 14px，桥端挠度接近阈值",
+      "description": "连续帧中桥面边缘曲率异常，雨雾场景下置信度略低，需要人工复核确认。",
+      "overlays": [
+        { "id": "o2", "label": "变形段", "left": 29, "top": 48, "width": 31, "height": 11 }
+      ]
+    },
+    {
+      "id": "EV-015",
+      "objectName": "青岛胶州湾大桥 #B-015",
+      "objectType": "普通桥梁",
+      "title": "车辆拥堵",
+      "type": "车辆积压",
+      "riskLevel": "低",
+      "confidence": 88,
+      "scene": "白天",
+      "time": "14:29:18",
+      "camera": "UAV-12",
+      "clipRange": "03:44 - 04:02",
+      "status": "已确认",
+      "sensorSignal": "车流密度 0.76，平均速度 18km/h",
+      "description": "车流速度下降但未达到高风险阈值，建议持续观察。",
+      "overlays": [
+        { "id": "o3", "label": "拥堵区域", "left": 18, "top": 54, "width": 42, "height": 16 }
+      ]
+    },
+    {
+      "id": "EV-008",
+      "objectName": "厦门演武大桥 #B-008",
+      "objectType": "普通桥梁",
+      "title": "桥面火情",
+      "type": "桥面火灾",
+      "riskLevel": "高",
+      "confidence": 95,
+      "scene": "夜间",
+      "time": "14:28:05",
+      "camera": "UAV-07",
+      "clipRange": "00:51 - 01:09",
+      "status": "待复核",
+      "sensorSignal": "热源温升 +42℃，烟雾区域持续扩大",
+      "description": "可见光与热源特征同时触发，事件应进入应急复核队列。",
+      "overlays": [
+        { "id": "o4", "label": "明火区域", "left": 58, "top": 45, "width": 16, "height": 20 }
+      ]
+    },
+    {
+      "id": "EV-002",
+      "objectName": "上海长江大桥 #B-002",
+      "objectType": "长大桥梁",
+      "title": "船舶碰撞风险",
+      "type": "船撞风险",
+      "riskLevel": "中",
+      "confidence": 94,
+      "scene": "白天",
+      "time": "14:27:33",
+      "camera": "UAV-10",
+      "clipRange": "04:02 - 04:24",
+      "status": "待复核",
+      "sensorSignal": "AIS 偏航 +3.2°，通航净空 32.5m",
+      "description": "船舶接近桥墩保护区，视频轨迹与 AIS 偏航同时抬升，融合评分已达关注阈值。",
+      "overlays": [
+        { "id": "o5", "label": "目标船舶", "left": 23, "top": 59, "width": 19, "height": 12 },
+        { "id": "o6", "label": "桥墩保护区", "left": 55, "top": 26, "width": 13, "height": 41 }
+      ]
+    },
+    {
+      "id": "EV-044",
+      "objectName": "海沧隧道 #T-009",
+      "objectType": "隧道",
+      "title": "隧道烟雾异常",
+      "type": "烟雾预警",
+      "riskLevel": "中",
+      "confidence": 90,
+      "scene": "夜间",
+      "time": "14:26:19",
+      "camera": "UAV-15",
+      "clipRange": "01:42 - 01:59",
+      "status": "待复核",
+      "sensorSignal": "CO 指数抬升 15%，照度下降 22%",
+      "description": "视频烟雾特征与环境监测异常同时出现，建议进入联动复核流程。",
+      "overlays": [
+        { "id": "o7", "label": "烟雾区域", "left": 44, "top": 33, "width": 20, "height": 24 }
+      ]
+    },
+    {
+      "id": "EV-055",
+      "objectName": "南山隧道 #T-012",
+      "objectType": "隧道",
+      "title": "异常停车事件",
+      "type": "异常停车",
+      "riskLevel": "中",
+      "confidence": 86,
+      "scene": "白天",
+      "time": "14:25:01",
+      "camera": "CAM-09",
+      "clipRange": "00:32 - 00:48",
+      "status": "待复核",
+      "sensorSignal": "视频检测到车辆静止 >30s，交通流量下降 12%",
+      "description": "隧道内一辆货车异常停留，后方车辆开始变道绕行，需确认是否为故障或事故。",
+      "overlays": [
+        { "id": "o8", "label": "静止车辆", "left": 35, "top": 52, "width": 18, "height": 22 }
+      ]
+    },
+    {
+      "id": "EV-067",
+      "objectName": "穿山隧道 #T-018",
+      "objectType": "隧道",
+      "title": "能见度下降预警",
+      "type": "环境异常",
+      "riskLevel": "低",
+      "confidence": 82,
+      "scene": "雨雾",
+      "time": "14:23:47",
+      "camera": "CAM-11",
+      "clipRange": "01:18 - 01:32",
+      "status": "已确认",
+      "sensorSignal": "能见度降至 1.8km，照度 98lux",
+      "description": "入口段能见度低于阈值，已自动开启加强通风，建议关注趋势变化。",
+      "overlays": []
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "byRiskLevel": { "高": 2, "中": 4, "低": 2 },
+    "byObjectType": { "普通桥梁": 2, "长大桥梁": 3, "隧道": 3 },
+    "byStatus": { "待复核": 6, "已确认": 2 }
+  }
+}

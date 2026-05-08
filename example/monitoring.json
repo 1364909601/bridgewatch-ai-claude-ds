@@ -1,0 +1,78 @@
+{
+  "description": "示例监测专题数据 — 驱动船撞融合（MegaBridgePage）和隧道（TunnelPage）页面",
+  "version": "1.0",
+  "shipCollision": {
+    "title": "船撞融合预警专题",
+    "shipTrack": [
+      { "label": "船舶 A", "x": 30, "y": 150 },
+      { "label": "船舶 A", "x": 60, "y": 130 },
+      { "label": "船舶 A", "x": 100, "y": 110 },
+      { "label": "船舶 A", "x": 130, "y": 90 },
+      { "label": "船舶 A", "x": 180, "y": 60 }
+    ],
+    "alertCards": [
+      { "label": "一级保护圈", "value": "36m", "tone": "danger" },
+      { "label": "应变抬升", "value": "+18%", "tone": "warning" },
+      { "label": "偏航修正", "value": "2 次", "tone": "neutral" }
+    ],
+    "fusionFactors": [
+      { "label": "AIS 接近度", "score": 34, "note": "进入一级保护圈" },
+      { "label": "视频净距估计", "score": 26, "note": "净距低于 60m" },
+      { "label": "应变峰值", "score": 21, "note": "相对基线上升 18%" },
+      { "label": "振动异常", "score": 11, "note": "桥墩瞬时振动抬升" }
+    ],
+    "monitoringSeries": [
+      { "label": "14:28", "impact": 12, "strain": 34, "clearance": 88 },
+      { "label": "14:29", "impact": 16, "strain": 38, "clearance": 74 },
+      { "label": "14:30", "impact": 22, "strain": 42, "clearance": 63 },
+      { "label": "14:31", "impact": 36, "strain": 55, "clearance": 54 },
+      { "label": "14:32", "impact": 48, "strain": 64, "clearance": 47 }
+    ],
+    "apiFusionResults": [
+      { "fusion_id": "FUS-001", "score": 92.0, "risk_level": "high", "rule_desc": "AIS接近度 + 视频距离 + 应变峰值 + 振动能量", "fusion_time": "2026-05-08T14:30:00+08:00", "related_event_id": "EV-002" },
+      { "fusion_id": "FUS-002", "score": 75.5, "risk_level": "medium", "rule_desc": "AIS接近度 + 视频距离", "fusion_time": "2026-05-08T13:00:00+08:00", "related_event_id": null },
+      { "fusion_id": "FUS-003", "score": 45.0, "risk_level": "low", "rule_desc": "例行监测，无显著异常", "fusion_time": "2026-05-08T12:00:00+08:00", "related_event_id": null }
+    ]
+  },
+  "tunnel": {
+    "title": "隧道监测专题",
+    "environmentSeries": [
+      { "label": "14:28", "coIndex": 42, "lux": 156, "traffic": 1256 },
+      { "label": "14:29", "coIndex": 45, "lux": 151, "traffic": 1198 },
+      { "label": "14:30", "coIndex": 51, "lux": 143, "traffic": 1082 },
+      { "label": "14:31", "coIndex": 58, "lux": 131, "traffic": 986 },
+      { "label": "14:32", "coIndex": 49, "lux": 138, "traffic": 1034 }
+    ],
+    "alerts": [
+      { "label": "火灾报警", "value": 0, "tone": "ok" },
+      { "label": "设备故障", "value": 1, "tone": "warning" },
+      { "label": "交通事故", "value": 0, "tone": "ok" },
+      { "label": "异常停留", "value": 1, "tone": "warning" }
+    ],
+    "gauges": [
+      { "label": "空气质量", "value": "42", "unit": "AQI", "progress": "42%" },
+      { "label": "能见度", "value": "2.8", "unit": "km", "progress": "58%" },
+      { "label": "照度", "value": "156", "unit": "lux", "progress": "66%" },
+      { "label": "交通流量", "value": "1256", "unit": "辆/h", "progress": "72%" }
+    ],
+    "apiMonitoringData": [
+      { "data_id": 1, "object_id": "OBJ-T001", "data_type": "co", "data_time": "2026-05-08T14:28:00+08:00", "data_value": 42.5 },
+      { "data_id": 2, "object_id": "OBJ-T001", "data_type": "lux", "data_time": "2026-05-08T14:28:00+08:00", "data_value": 156.0 },
+      { "data_id": 3, "object_id": "OBJ-T001", "data_type": "traffic", "data_time": "2026-05-08T14:28:00+08:00", "data_value": 1256.0 },
+      { "data_id": 4, "object_id": "OBJ-T001", "data_type": "temperature", "data_time": "2026-05-08T14:28:00+08:00", "data_value": 23.6 }
+    ]
+  },
+  "sceneAssessment": [
+    { "metric": "坍塌识别", "day": 96, "night": 89, "fog": 83 },
+    { "metric": "桥面变形", "day": 93, "night": 86, "fog": 79 },
+    { "metric": "车辆积压", "day": 97, "night": 92, "fog": 88 },
+    { "metric": "桥面火灾", "day": 95, "night": 94, "fog": 86 }
+  ],
+  "readinessRadar": [
+    { "subject": "坍塌", "score": 91 },
+    { "subject": "变形", "score": 87 },
+    { "subject": "拥堵", "score": 95 },
+    { "subject": "火灾", "score": 93 },
+    { "subject": "夜雨", "score": 82 }
+  ]
+}
