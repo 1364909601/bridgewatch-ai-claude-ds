@@ -1,0 +1,16 @@
+[project]
+name = "bridgewatch-ai-backend"
+version = "0.1.0"
+description = "BridgeWatch AI - 桥梁与隧道重大风险智能识别与融合预警系统后端"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"

@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s \"http://localhost:5173/\")",
+      "Bash(curl -s \"http://localhost:5173/src/main.tsx\")",
+      "Bash(npx tsc *)",
+      "Bash(curl *)",
+      "Bash(python -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(python3 -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(pip install *)",
+      "Bash(python -c \"from app.models import *; print\\('Models OK:', len\\(__import__\\('app.models', fromlist=['*']\\).__all__\\), 'models loaded'\\)\")",
+      "Bash(python -c \"from app.utils import *; print\\('Utils OK'\\)\")",
+      "Bash(python -c \"from app.middleware import *; print\\('Middleware OK'\\)\")",
+      "Bash(python -c \"from app.main import app; print\\('FastAPI app created:', app.title, app.version\\)\")",
+      "Bash(python -c \"from app.models import *; print\\('Models OK'\\)\")",
+      "Bash(python -c \"from app.main import app; print\\('FastAPI app:', app.title, app.version\\)\")",
+      "Bash(python run.py)",
+      "Bash(python -m app.seed.seed_data)",
+      "Bash(taskkill /F /IM python.exe)",
+      "Bash(tasklist //FI \"IMAGENAME eq python.exe\")",
+      "Bash(taskkill //PID 13788 //F)",
+      "Bash(taskkill //PID 21012 //F)",
+      "Bash(grep -v \"^$\")",
+      "Bash(taskkill //PID 18696 //F)",
+      "Bash(taskkill //PID 11564 //F)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Total: {d[\\\\\"data\\\\\"][\\\\\"total\\\\\"]} events'\\)\")",
+      "Bash(taskkill //FI \"IMAGENAME eq python.exe\" //F)",
+      "mcp__Claude_in_Chrome__list_connected_browsers",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Events: {d[\\\\\"data\\\\\"][\\\\\"total\\\\\"]} total, {len\\(d[\\\\\"data\\\\\"][\\\\\"list\\\\\"]\\)} in page'\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Objects: {len\\(d[\\\\\"data\\\\\"]\\)} total'\\); [print\\(f'  - {o[\\\\\"object_name\\\\\"]} \\({o[\\\\\"object_type\\\\\"]}\\)'\\) for o in d['data']]\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Videos: {d[\\\\\"data\\\\\"][\\\\\"total\\\\\"]} total'\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Tasks: {d[\\\\\"data\\\\\"][\\\\\"total\\\\\"]} total'\\)\")",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
