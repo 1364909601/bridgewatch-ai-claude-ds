@@ -2,40 +2,30 @@ from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.models.inference_task import InferenceTask
+from app.schemas.tasks import TaskCreateRequest, TaskResponse
+from app.services.task_service import TaskService
 from app.utils.response import success_response
-from app.utils.pagination import PaginationParams, paginated_response
-from app.utils.id_generator import generate_task_id
+from app.utils.pagination import PaginatedResponse, paginated_response
 
 router = APIRouter()
 
 
 @router.post("/inference")
 async def create_inference_task(
-    body: dict,
+    body: TaskCreateRequest,
     db: AsyncSession = Depends(get_db),
 ):
-    task = InferenceTask(
-        task_id=generate_task_id(),
-        video_id=body.get("video_id", ""),
-        model_id=body.get("model_id", ""),
-        task_name=body.get("task_name", f"推理任务-{datetime.now().strftime('%Y%m%d%H%M%S')}"),
-        task_status="queued",
+    """创建推理任务"""
+    task = await TaskService.create_task(
+        db,
+        video_id=body.video_id,
+        model_id=body.model_id,
+        task_name=body.task_name,
     )
-    db.add(task)
-    await db.commit()
-    await db.refresh(task)
-
-    return success_response({
-        "task_id": task.task_id,
-        "task_name": task.task_name,
-        "task_status": task.task_status,
-        "created_time": task.created_time.isoformat() if task.created_time else None,
-    })
+    return success_response(task)
 
 
 @router.get("/inference")
@@ -46,39 +36,12 @@ async def list_inference_tasks(
     video_id: Optional[str] = Query(None),
     db: AsyncSession = Depends(get_db),
 ):
-    pagination = PaginationParams(page_no, page_size)
+    """获取推理任务列表"""
+    pagination = type("P", (), {"page_no": page_no, "page_size": page_size, "offset": (page_no - 1) * page_size, "limit": page_size})()
 
-    query = select(InferenceTask)
-    count_query = select(func.count()).select_from(InferenceTask)
-
-    if task_status:
-        query = query.where(InferenceTask.task_status == task_status)
-        count_query = count_query.where(InferenceTask.task_status == task_status)
-    if video_id:
-        query = query.where(InferenceTask.video_id == video_id)
-        count_query = count_query.where(InferenceTask.video_id == video_id)
-
-    total_result = await db.execute(count_query)
-    total = total_result.scalar() or 0
-
-    query = query.order_by(InferenceTask.created_time.desc())
-    query = query.offset(pagination.offset).limit(pagination.limit)
-    result = await db.execute(query)
-    tasks = result.scalars().all()
-
-    return success_response(paginated_response(
-        [{
-            "task_id": t.task_id,
-            "video_id": t.video_id,
-            "model_id": t.model_id,
-            "task_name": t.task_name,
-            "task_status": t.task_status,
-            "start_time": t.start_time.isoformat() if t.start_time else None,
-            "end_time": t.end_time.isoformat() if t.end_time else None,
-            "result_summary": t.result_summary,
-            "error_message": t.error_message,
-            "created_time": t.created_time.isoformat() if t.created_time else None,
-        } for t in tasks],
-        total,
-        pagination,
-    ))
+    items, total = await TaskService.list_tasks(
+        db, pagination,
+        task_status=task_status,
+        video_id=video_id,
+    )
+    return success_response(paginated_response(items, total, pagination))

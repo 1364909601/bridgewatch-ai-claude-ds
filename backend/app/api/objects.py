@@ -1,13 +1,16 @@
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
 from app.database import get_db
-from app.models.object_info import ObjectInfo
+from app.schemas.objects import ObjectResponse
+from app.services.object_service import ObjectService
 from app.utils.response import success_response
 
 router = APIRouter()
+
+# Type alias for list response
+ObjectListResponse = list[ObjectResponse]
 
 
 @router.get("")
@@ -16,20 +19,8 @@ async def list_objects(
     status: Optional[str] = Query(None, description="状态: active/inactive"),
     db: AsyncSession = Depends(get_db),
 ):
-    query = select(ObjectInfo)
-    if object_type:
-        query = query.where(ObjectInfo.object_type == object_type)
-    if status:
-        query = query.where(ObjectInfo.status == status)
-    query = query.order_by(ObjectInfo.object_name)
-
-    result = await db.execute(query)
-    objects = result.scalars().all()
-
-    return success_response([{
-        "object_id": o.object_id,
-        "object_name": o.object_name,
-        "object_type": o.object_type,
-        "location_desc": o.location_desc,
-        "status": o.status,
-    } for o in objects])
+    """获取监测对象列表"""
+    objects = await ObjectService.list_objects(
+        db, object_type=object_type, status=status
+    )
+    return success_response(objects)

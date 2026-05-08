@@ -1,7 +1,11 @@
+import logging
+import traceback
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from app.utils.response import error_response
+
+logger = logging.getLogger(__name__)
 
 
 class AppException(Exception):
@@ -32,6 +36,7 @@ class ForbiddenException(AppException):
 
 
 async def app_exception_handler(request: Request, exc: AppException):
+    logger.warning(f"App exception: {exc.message} (code={exc.code})")
     return JSONResponse(
         status_code=exc.status_code,
         content=error_response(exc.code, exc.message).model_dump(),
@@ -39,6 +44,7 @@ async def app_exception_handler(request: Request, exc: AppException):
 
 
 async def unhandled_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled exception: {exc}\n{traceback.format_exc()}")
     return JSONResponse(
         status_code=500,
         content=error_response(500, "服务器内部错误").model_dump(),
