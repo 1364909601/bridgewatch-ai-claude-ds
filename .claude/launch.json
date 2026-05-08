@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "bridgewatch-ai",
-      "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd bridgewatch-ai && npm run dev"],
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\Users\\fxj\\Desktop\\test-code - 副本\\bridgewatch-ai && npm run dev"],
       "port": 5173
     }
   ]
