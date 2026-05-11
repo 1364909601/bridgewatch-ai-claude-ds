@@ -16,6 +16,7 @@ from app.models.inference_task import InferenceTask
 from app.models.object_info import ObjectInfo
 from app.models.video_info import VideoInfo
 from app.engine.detector import run_detection_pipeline
+from app.services.alert_service import AlertService
 from app.utils.id_generator import generate_event_id
 
 logger = logging.getLogger(__name__)
@@ -112,7 +113,7 @@ class InferenceWorker:
             results = run_detection_pipeline(video, obj)
 
             # Create EventRecord for each detection result
-            events_created = 0
+            created_events: list[EventRecord] = []
             for det in results:
                 event = EventRecord(
                     event_id=generate_event_id(),
@@ -128,16 +129,22 @@ class InferenceWorker:
                     review_status="pending",
                 )
                 db.add(event)
-                events_created += 1
+                created_events.append(event)
+
+            # Flush to get event IDs, then evaluate alerts
+            if created_events:
+                await db.flush()
+                for event in created_events:
+                    await AlertService.evaluate_new_event(db, event)
 
             # Update task status
             db_task = await db.get(InferenceTask, task.task_id)
             if db_task:
                 db_task.task_status = "success"
                 db_task.end_time = datetime.utcnow()
-                if events_created > 0:
+                if created_events:
                     db_task.result_summary = (
-                        f"检测到 {events_created} 个事件: "
+                        f"检测到 {len(created_events)} 个事件: "
                         + ", ".join(f"{r.event_type}={r.risk_level}" for r in results)
                     )
                 else:
@@ -145,11 +152,11 @@ class InferenceWorker:
 
             await db.commit()
 
-            if results:
+            if created_events:
                 logger.info(
                     "Task %s completed: %d event(s): %s",
                     task.task_id,
-                    events_created,
+                    len(created_events),
                     [(r.event_type, r.risk_level) for r in results],
                 )
             else:

@@ -22,7 +22,7 @@ class IDGenerator:
 
 
 def generate_event_id() -> str:
-    return IDGenerator.generate("EVT")
+    return IDGenerator.generate_unique("EVT")
 
 
 def generate_video_id() -> str:

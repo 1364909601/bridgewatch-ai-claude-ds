@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
@@ -13,6 +14,20 @@ from app.engine.worker import InferenceWorker
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+async def _escalation_loop():
+    """Background task: periodically check for unacknowledged events and escalate."""
+    from app.database import async_session_factory
+    from app.services.alert_service import AlertService
+    while True:
+        try:
+            async with async_session_factory() as db:
+                await AlertService.check_escalations(db)
+                await db.commit()
+        except Exception:
+            logger.exception("Escalation check failed")
+        await asyncio.sleep(60)  # check every 60 seconds
 
 
 @asynccontextmanager
@@ -31,9 +46,18 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         app.state._inference_worker = None
         logger.info("Inference worker disabled by config")
 
+    # Start escalation check loop
+    escalation_task = asyncio.create_task(_escalation_loop(), name="escalation-loop")
+    app.state._escalation_task = escalation_task
+
     yield
 
-    # Shutdown: stop worker first, then dispose engine
+    # Shutdown: stop workers first, then dispose engine
+    escalation_task.cancel()
+    try:
+        await escalation_task
+    except asyncio.CancelledError:
+        pass
     if settings.WORKER_ENABLED:
         await worker.stop()
     await engine.dispose()

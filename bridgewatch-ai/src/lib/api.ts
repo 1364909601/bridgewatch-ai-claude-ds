@@ -280,3 +280,44 @@ export function getObjects(params?: { object_type?: string; status?: string }) {
 export function getDicts(dictType: string) {
   return apiClient<DictItem[]>(`/dicts/${dictType}`);
 }
+
+// --- Alerts API ---
+
+export interface AlertItem {
+  alert_id: string;
+  related_event_id: string | null;
+  alert_type: string;
+  severity: string;
+  title: string;
+  message: string | null;
+  status: string;
+  created_time: string | null;
+}
+
+export interface UnreadCount {
+  count: number;
+}
+
+export function getAlerts(params?: {
+  page_no?: number;
+  page_size?: number;
+  status?: string;
+  severity?: string;
+}) {
+  return apiClient<PaginatedResponse<AlertItem>>(`/alerts${buildQuery(params || {})}`);
+}
+
+export function getUnreadAlertCount() {
+  return apiClient<UnreadCount>("/alerts/unread-count");
+}
+
+export function acknowledgeAlert(alertId: string) {
+  return apiClient<AlertItem>(`/alerts/${alertId}/acknowledge`, { method: "POST" });
+}
+
+export function batchAcknowledgeAlerts(alertIds: string[]) {
+  return apiClient<{ acknowledged: number; not_found: string[] }>("/alerts/batch-acknowledge", {
+    method: "POST",
+    body: JSON.stringify({ alert_ids: alertIds }),
+  });
+}

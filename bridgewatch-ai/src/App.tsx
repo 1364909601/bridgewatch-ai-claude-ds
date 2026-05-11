@@ -32,6 +32,7 @@ import { PlaybackPage } from "./pages/PlaybackPage";
 import { TunnelPage } from "./pages/TunnelPage";
 import { PageNav } from "./components/PageNav";
 import { StatusPill } from "./components/StatusPill";
+import { AlertBell } from "./components/AlertBell";
 
 function AppInner() {
   const [activePage, setActivePage] = useState<PageId>("overview");
@@ -193,6 +194,7 @@ function AppInner() {
           </div>
           <div className="top-actions">
             <span className="timestamp">2025-05-30 14:32:18</span>
+            <AlertBell />
             <button className="icon-button" type="button" title="刷新">
               <RefreshCw size={16} />
             </button>
