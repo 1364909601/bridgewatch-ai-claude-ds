@@ -91,7 +91,9 @@
       "Read(//usr/local/bin/**)",
       "Read(//usr/bin/**)",
       "Read(//c//**)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(npm install *)",
+      "Bash(taskkill /F /IM cmd.exe /IM python.exe /IM node.exe)"
     ]
   }
 }
