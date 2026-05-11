@@ -11,8 +11,11 @@ class DashboardSummaryResponse(BaseModel):
     """Dashboard summary statistics."""
     total: int
     high_risk: int
+    medium_risk: int = 0
+    low_risk: int = 0
     bridges: int
     tunnels: int
+    total_objects: int = 0
 
 
 class DashboardTrendPoint(BaseModel):

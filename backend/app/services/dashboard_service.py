@@ -34,9 +34,15 @@ class DashboardService:
         scene_type: Optional[str] = None,
     ) -> dict:
         """Get dashboard summary (total events, high risk, bridge/tunnel counts)."""
+        # Count total objects (without event join)
+        obj_count_result = await db.execute(select(func.count(ObjectInfo.object_id)))
+        total_objects = obj_count_result.scalar() or 0
+
         query = select(
             func.count().label("total"),
             func.sum(case((EventRecord.risk_level == "high", 1), else_=0)).label("high_risk"),
+            func.sum(case((EventRecord.risk_level == "medium", 1), else_=0)).label("medium_risk"),
+            func.sum(case((EventRecord.risk_level == "low", 1), else_=0)).label("low_risk"),
             func.sum(case((ObjectInfo.object_type == "bridge", 1), else_=0)).label("bridges"),
             func.sum(case((ObjectInfo.object_type == "tunnel", 1), else_=0)).label("tunnels"),
         ).join(ObjectInfo, EventRecord.object_id == ObjectInfo.object_id)
@@ -58,8 +64,11 @@ class DashboardService:
         return {
             "total": row.total or 0,
             "high_risk": row.high_risk or 0,
+            "medium_risk": row.medium_risk or 0,
+            "low_risk": row.low_risk or 0,
             "bridges": row.bridges or 0,
             "tunnels": row.tunnels or 0,
+            "total_objects": total_objects,
         }
 
     @staticmethod

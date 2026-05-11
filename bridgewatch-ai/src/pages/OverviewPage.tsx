@@ -15,25 +15,41 @@ import {
 import {
   events,
   loadSeries,
-  overviewMetrics,
   systemStats,
   trendSeries,
   videoFeeds
 } from "../data/mockData";
-import type { PageId } from "../types";
+import type { DashboardMetric, PageId } from "../types";
 import { MetricCard } from "../components/MetricCard";
 import { Panel } from "../components/Panel";
 import { StatusPill } from "../components/StatusPill";
+import { useDashboardSummary } from "../hooks/use-dashboard";
 
 interface OverviewPageProps {
   onFocusEvent: (eventId: string, targetPage?: PageId) => void;
 }
 
 export function OverviewPage({ onFocusEvent }: OverviewPageProps) {
+  const { data: summary, isLoading } = useDashboardSummary();
+
+  const metrics: DashboardMetric[] = isLoading
+    ? [
+        { id: "high", label: "高风险事件", value: "—", hint: "加载中...", tone: "danger" },
+        { id: "medium", label: "中风险事件", value: "—", hint: "加载中...", tone: "warning" },
+        { id: "low", label: "低风险事件", value: "—", hint: "加载中...", tone: "low" },
+        { id: "monitored", label: "监测对象", value: "—", hint: "加载中...", tone: "info" },
+      ]
+    : [
+        { id: "high", label: "高风险事件", value: String(summary?.high_risk ?? 0), hint: "需要立即复核", tone: "danger" },
+        { id: "medium", label: "中风险事件", value: String(summary?.medium_risk ?? 0), hint: "需要持续关注", tone: "warning" },
+        { id: "low", label: "低风险事件", value: String(summary?.low_risk ?? 0), hint: "维持自动巡检", tone: "low" },
+        { id: "monitored", label: "监测对象", value: String(summary?.total_objects ?? 0), hint: "桥梁与隧道总数", tone: "info" },
+      ];
+
   return (
     <div className="dashboard-stack">
       <div className="risk-grid">
-        {overviewMetrics.map((metric) => (
+        {metrics.map((metric) => (
           <MetricCard key={metric.id} metric={metric} />
         ))}
       </div>

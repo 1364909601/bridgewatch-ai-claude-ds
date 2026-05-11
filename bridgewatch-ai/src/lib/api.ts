@@ -60,8 +60,11 @@ export interface EventApiItem {
 export interface DashboardSummary {
   total: number;
   high_risk: number;
+  medium_risk: number;
+  low_risk: number;
   bridges: number;
   tunnels: number;
+  total_objects: number;
 }
 
 export interface TrendPoint {
