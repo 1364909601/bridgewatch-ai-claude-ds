@@ -78,14 +78,14 @@ export function mapEventApiToRecord(api: EventApiItem): EventRecord {
 
   return {
     id: api.event_id,
-    objectName: api.object_id, // Will be enriched with object name if available
+    objectName: api.object_name ?? api.object_id,
     objectType: objectTypeMap[api.event_type] ?? "普通桥梁",
     type: api.event_type as EventRecord["type"],
     title: eventTypeLabels[api.event_type] ?? api.event_type,
     riskLevel: mapRiskLevel(api.risk_level),
     scene: mapSceneType(api.scene_type),
     time: api.event_time,
-    camera: "", // Derived from video name — enriched in page if needed
+    camera: api.video_name ?? "",
     confidence: api.risk_level === "high" ? 98 : api.risk_level === "medium" ? 85 : 72,
     clipRange: formatClipRange(api.start_second, api.end_second),
     sensorSignal: api.result_desc ?? "",

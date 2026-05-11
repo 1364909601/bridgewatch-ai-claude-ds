@@ -20,7 +20,7 @@ import {
   pageObjectives,
   systemStats
 } from "./data/mockData";
-import { useEventList, useEventDetail } from "./hooks/use-events";
+import { useEventList, useEventDetail, useReviewEvent } from "./hooks/use-events";
 import { mapEventsApiToRecords } from "./lib/type-mappers";
 import type { EventRecord, OperationsDigest, PageId } from "./types";
 import { EventCenterPage } from "./pages/EventCenterPage";
@@ -73,6 +73,12 @@ function AppInner() {
     return events.find((event) => event.id === selectedEventId) ?? events[0];
   })();
 
+  const reviewMutation = useReviewEvent();
+
+  const handleReviewEvent = (eventId: string, review_status: string, review_remark?: string) => {
+    reviewMutation.mutate({ eventId, review_status, review_remark });
+  };
+
   const activeNav = navItems.find((item) => item.id === activePage) ?? navItems[0];
 
   useEffect(() => {
@@ -118,6 +124,8 @@ function AppInner() {
             selectedEvent={selectedEvent}
             onSelectEvent={setSelectedEventId}
             onOpenPlayback={(eventId) => focusEvent(eventId, "playback")}
+            onReviewEvent={handleReviewEvent}
+            reviewPending={reviewMutation.isPending}
           />
         );
       case "playback":

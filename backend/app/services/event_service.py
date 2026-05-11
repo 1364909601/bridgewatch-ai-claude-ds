@@ -122,7 +122,32 @@ class EventService:
         result = await db.execute(base_query)
         events = result.scalars().all()
 
-        return [EventService._to_dict(e) for e in events], total
+        event_dicts = [EventService._to_dict(e) for e in events]
+        # Batch-enrich with object_name and video_name
+        obj_ids = list({e["object_id"] for e in event_dicts if e.get("object_id")})
+        vid_ids = list({e["video_id"] for e in event_dicts if e.get("video_id")})
+        obj_map: dict[str, str] = {}
+        if obj_ids:
+            r = await db.execute(
+                select(ObjectInfo.object_id, ObjectInfo.object_name).where(
+                    ObjectInfo.object_id.in_(obj_ids)
+                )
+            )
+            for row in r.all():
+                obj_map[row.object_id] = row.object_name
+        vid_map: dict[str, str] = {}
+        if vid_ids:
+            r = await db.execute(
+                select(VideoInfo.video_id, VideoInfo.video_name).where(
+                    VideoInfo.video_id.in_(vid_ids)
+                )
+            )
+            for row in r.all():
+                vid_map[row.video_id] = row.video_name
+        for e in event_dicts:
+            e["object_name"] = obj_map.get(e.get("object_id", ""), e.get("object_id"))
+            e["video_name"] = vid_map.get(e.get("video_id", ""), e.get("video_id"))
+        return event_dicts, total
 
     @staticmethod
     async def get_event_detail(db: AsyncSession, event_id: str) -> dict:
@@ -133,7 +158,19 @@ class EventService:
         event = result.scalar_one_or_none()
         if not event:
             raise NotFoundException(f"事件 {event_id} 不存在")
-        return EventService._to_detail_dict(event)
+        d = EventService._to_detail_dict(event)
+        # Enrich with object_name and video_name
+        obj_r = await db.execute(
+            select(ObjectInfo.object_name).where(ObjectInfo.object_id == event.object_id)
+        )
+        obj = obj_r.scalar_one_or_none()
+        d["object_name"] = obj or event.object_id
+        vid_r = await db.execute(
+            select(VideoInfo.video_name).where(VideoInfo.video_id == event.video_id)
+        )
+        vid = vid_r.scalar_one_or_none()
+        d["video_name"] = vid or event.video_id
+        return d
 
     @staticmethod
     async def review_event(

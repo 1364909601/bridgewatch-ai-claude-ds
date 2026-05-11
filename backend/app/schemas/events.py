@@ -27,7 +27,9 @@ class EventResponse(BaseModel):
     """Event item in a list response."""
     event_id: str
     object_id: str
+    object_name: Optional[str] = None
     video_id: str
+    video_name: Optional[str] = None
     event_type: str
     risk_level: str
     scene_type: Optional[str] = None

@@ -41,7 +41,9 @@ export interface DictItem {
 export interface EventApiItem {
   event_id: string;
   object_id: string;
+  object_name?: string;
   video_id: string;
+  video_name?: string;
   event_type: string;
   risk_level: string;
   scene_type: string | null;

@@ -10,13 +10,17 @@ interface EventCenterPageProps {
   selectedEvent: EventRecord;
   onSelectEvent: (eventId: string) => void;
   onOpenPlayback: (eventId: string) => void;
+  onReviewEvent: (eventId: string, reviewStatus: string, reviewRemark?: string) => void;
+  reviewPending: boolean;
 }
 
 export function EventCenterPage({
   events,
   selectedEvent,
   onSelectEvent,
-  onOpenPlayback
+  onOpenPlayback,
+  onReviewEvent,
+  reviewPending
 }: EventCenterPageProps) {
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState<"全部" | EventRecord["riskLevel"]>("全部");
@@ -111,9 +115,22 @@ export function EventCenterPage({
               </button>
               <button
                 type="button"
-                className="rounded-full border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm text-slate-200 transition hover:border-slate-500"
+                disabled={reviewPending}
+                onClick={() =>
+                  onReviewEvent(
+                    selectedEvent.id,
+                    selectedEvent.status === "已确认" ? "pending" : "reviewed"
+                  )
+                }
+                className={`rounded-full border px-4 py-2 text-sm transition ${
+                  reviewPending
+                    ? "border-slate-600 bg-slate-800 text-slate-400 cursor-not-allowed"
+                    : selectedEvent.status === "已确认"
+                    ? "border-slate-500 bg-slate-700/60 text-slate-200 hover:border-slate-300"
+                    : "border-slate-700 bg-slate-900/60 text-slate-200 hover:border-slate-500"
+                }`}
               >
-                标记已复核
+                {reviewPending ? "复核中..." : selectedEvent.status === "已确认" ? "撤销复核" : "标记已复核"}
               </button>
             </div>
           </div>
