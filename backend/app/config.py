@@ -35,6 +35,10 @@ class Settings(BaseSettings):
         # Derive sync URL from async URL
         return self.DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://")
 
+    # Inference Worker
+    WORKER_ENABLED: bool = True
+    WORKER_POLL_INTERVAL: int = 5
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 

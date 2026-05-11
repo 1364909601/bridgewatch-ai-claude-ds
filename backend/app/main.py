@@ -9,6 +9,10 @@ from app.database import engine, Base
 from app.utils.exceptions import register_exception_handlers
 from app.middleware.logging_mw import LoggingMiddleware
 from app.api.router import api_router
+from app.engine.worker import InferenceWorker
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -17,8 +21,21 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     if settings.DEBUG:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+
+    # Start background inference worker
+    worker = InferenceWorker(poll_interval=settings.WORKER_POLL_INTERVAL)
+    if settings.WORKER_ENABLED:
+        await worker.start()
+        app.state._inference_worker = worker
+    else:
+        app.state._inference_worker = None
+        logger.info("Inference worker disabled by config")
+
     yield
-    # Shutdown: dispose engine
+
+    # Shutdown: stop worker first, then dispose engine
+    if settings.WORKER_ENABLED:
+        await worker.stop()
     await engine.dispose()
 
 
