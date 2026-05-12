@@ -46,6 +46,15 @@ services:
     volumes:
       - filedata:/app/data/files
 
+  frontend:
+    build:
+      context: ..
+      dockerfile: bridgewatch-ai/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
 volumes:
   pgdata:
   filedata:
