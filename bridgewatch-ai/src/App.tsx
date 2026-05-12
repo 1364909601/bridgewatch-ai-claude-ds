@@ -5,10 +5,12 @@ import {
   CheckCircle2,
   Clock3,
   Gauge,
+  LogOut,
   RefreshCw,
   Settings,
   ShieldCheck,
-  Sun
+  Sun,
+  User,
 } from "lucide-react";
 import { startTransition, useEffect, useState } from "react";
 import { QueryProvider } from "./lib/query-provider";
@@ -33,8 +35,12 @@ import { TunnelPage } from "./pages/TunnelPage";
 import { PageNav } from "./components/PageNav";
 import { StatusPill } from "./components/StatusPill";
 import { AlertBell } from "./components/AlertBell";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { LoginPage } from "./pages/LoginPage";
 
 function AppInner() {
+  const { isLoggedIn, user, logout } = useAuth();
+  const [activePage, setActivePage] = useState<PageId>("overview");
   const [activePage, setActivePage] = useState<PageId>("overview");
   const [selectedEventId, setSelectedEventId] = useState(mockEvents[0].id);
   const [digest, setDigest] = useState<OperationsDigest>({
@@ -204,6 +210,24 @@ function AppInner() {
             <button className="icon-button" type="button" title="设置">
               <Settings size={16} />
             </button>
+            {user && (
+              <div className="flex items-center gap-2 border-l border-slate-700/50 pl-3 ml-1">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brass/20">
+                  <User size={14} className="text-brass" />
+                </div>
+                <span className="hidden text-sm text-slate-200 md:inline">
+                  {user.display_name || user.username}
+                </span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="icon-button text-slate-500 hover:text-danger"
+                  title="退出登录"
+                >
+                  <LogOut size={15} />
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
@@ -239,7 +263,7 @@ function AppInner() {
             </AnimatePresence>
           </section>
 
-          <aside className="ai-panel">
+          <aside className="ai-panel" style={user && user.role === "viewer" ? { maxHeight: "calc(100vh - 180px)", overflowY: "auto" } : {}}>
             <div className="panel-header tight">
               <div>
                 <h3 className="panel-title">AI 风险摘要</h3>
@@ -287,10 +311,30 @@ function AppInner() {
   );
 }
 
+function AppShell() {
+  const { isLoggedIn, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_50%_30%,rgba(26,38,35,0.9),rgb(10,12,14))]">
+        <div className="text-slate-400 text-sm">加载中...</div>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return <LoginPage />;
+  }
+
+  return <AppInner />;
+}
+
 export default function App() {
   return (
     <QueryProvider>
-      <AppInner />
+      <AuthProvider>
+        <AppShell />
+      </AuthProvider>
     </QueryProvider>
   );
 }

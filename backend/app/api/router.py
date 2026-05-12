@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.api.health import router as health_router
 from app.api.objects import router as objects_router
@@ -9,18 +9,25 @@ from app.api.videos import router as videos_router
 from app.api.tasks import router as tasks_router
 from app.api.topics import router as topics_router
 from app.api.alerts import router as alerts_router
+from app.api.auth import router as auth_router
+from app.middleware.auth import get_current_user
 
 api_router = APIRouter()
 
-# Health check (no auth)
+# Public routes (no auth required)
 api_router.include_router(health_router, tags=["Health"])
+api_router.include_router(auth_router, prefix="/auth", tags=["Auth"])
 
-# Protected API routes
-api_router.include_router(objects_router, prefix="/objects", tags=["Objects"])
-api_router.include_router(dicts_router, prefix="/dicts", tags=["Dicts"])
-api_router.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
-api_router.include_router(events_router, prefix="/events", tags=["Events"])
-api_router.include_router(videos_router, prefix="/videos", tags=["Videos"])
-api_router.include_router(tasks_router, prefix="/tasks", tags=["Tasks"])
-api_router.include_router(topics_router, prefix="/topics", tags=["Topics"])
-api_router.include_router(alerts_router, prefix="/alerts", tags=["Alerts"])
+# Protected API routes (auth required)
+protected_routes = [
+    (objects_router, "/objects", "Objects"),
+    (dicts_router, "/dicts", "Dicts"),
+    (dashboard_router, "/dashboard", "Dashboard"),
+    (events_router, "/events", "Events"),
+    (videos_router, "/videos", "Videos"),
+    (tasks_router, "/tasks", "Tasks"),
+    (topics_router, "/topics", "Topics"),
+    (alerts_router, "/alerts", "Alerts"),
+]
+for router, prefix, tag in protected_routes:
+    api_router.include_router(router, prefix=prefix, tags=[tag], dependencies=[Depends(get_current_user)])

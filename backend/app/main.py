@@ -50,6 +50,17 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     escalation_task = asyncio.create_task(_escalation_loop(), name="escalation-loop")
     app.state._escalation_task = escalation_task
 
+    # Seed default users in dev mode
+    if settings.DEBUG:
+        try:
+            from app.database import async_session_factory
+            from app.services.auth_service import AuthService
+            async with async_session_factory() as db:
+                await AuthService.seed_users(db)
+                await db.commit()
+        except Exception:
+            logger.exception("Failed to seed users")
+
     yield
 
     # Shutdown: stop workers first, then dispose engine

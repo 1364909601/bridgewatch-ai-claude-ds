@@ -176,11 +176,19 @@ async function apiClient<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
+  const token = getToken();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  if (options?.headers) {
+    Object.assign(headers, options.headers);
+  }
+
   const response = await fetch(`${API_BASE}${endpoint}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
+    headers,
     ...options,
   });
 
@@ -320,4 +328,33 @@ export function batchAcknowledgeAlerts(alertIds: string[]) {
     method: "POST",
     body: JSON.stringify({ alert_ids: alertIds }),
   });
+}
+
+// --- Auth API ---
+
+export interface LoginResult {
+  access_token: string;
+  token_type: string;
+  user_id: string;
+  username: string;
+  display_name: string;
+  role: string;
+}
+
+export interface CurrentUser {
+  user_id: string;
+  username: string;
+  display_name: string;
+  role: string;
+}
+
+export function login(username: string, password: string) {
+  return apiClient<LoginResult>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ username, password }),
+  });
+}
+
+export function getMe() {
+  return apiClient<CurrentUser>("/auth/me");
 }
