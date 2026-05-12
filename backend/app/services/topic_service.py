@@ -61,21 +61,19 @@ class TopicService:
         object_id: str,
         start_time: Optional[str] = None,
         end_time: Optional[str] = None,
+        fusion_type: str = "ship_collision",
     ) -> list[dict]:
-        """Get ship collision fusion analysis results."""
-        # Verify object exists and is a bridge
+        """Get fusion analysis results for a specified fusion type."""
+        # Verify object exists
         obj_result = await db.execute(
-            select(ObjectInfo).where(
-                ObjectInfo.object_id == object_id,
-                ObjectInfo.object_type == "bridge",
-            )
+            select(ObjectInfo).where(ObjectInfo.object_id == object_id)
         )
         if not obj_result.scalar_one_or_none():
-            raise NotFoundException(f"桥梁对象 {object_id} 不存在")
+            raise NotFoundException(f"监测对象 {object_id} 不存在")
 
         query = select(FusionResult).where(
             FusionResult.object_id == object_id,
-            FusionResult.fusion_type == "ship_collision",
+            FusionResult.fusion_type == fusion_type,
         )
         if start_time:
             query = query.where(FusionResult.fusion_time >= datetime.fromisoformat(start_time))

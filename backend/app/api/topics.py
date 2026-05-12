@@ -46,3 +46,25 @@ async def ship_collision_fusion(
         end_time=end_time,
     )
     return success_response(data)
+
+
+@router.get("/tunnel/fusion")
+async def tunnel_fusion(
+    object_id: str = Query(..., description="隧道对象ID"),
+    start_time: Optional[str] = Query(None),
+    end_time: Optional[str] = Query(None),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    隧道融合预警分析
+    - 融合评分结果
+    - 环境监测数据关联
+    """
+    data = await TopicService.get_ship_collision_fusion(
+        db,
+        object_id=object_id,
+        start_time=start_time,
+        end_time=end_time,
+        fusion_type="tunnel",
+    )
+    return success_response(data)

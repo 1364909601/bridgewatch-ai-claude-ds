@@ -49,6 +49,8 @@ def risk_level_from_confidence(confidence: float, event_type: str) -> str:
         "deformation": (0.80, 0.65),
         "congestion": (0.85, 0.70),
         "fire": (0.80, 0.65),
+        "ship_collision": (0.80, 0.65),
+        "tunnel_anomaly": (0.80, 0.65),
     }
     high_th, med_th = thresholds.get(event_type, (0.85, 0.65))
     if confidence >= high_th:

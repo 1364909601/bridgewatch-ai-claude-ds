@@ -17,7 +17,7 @@ from app.models.object_info import ObjectInfo
 from app.models.video_info import VideoInfo
 from app.engine.detector import run_detection_pipeline
 from app.services.alert_service import AlertService
-from app.utils.id_generator import generate_event_id
+from app.utils.id_generator import IDGenerator, generate_event_id
 
 logger = logging.getLogger(__name__)
 
@@ -136,6 +136,22 @@ class InferenceWorker:
                 await db.flush()
                 for event in created_events:
                     await AlertService.evaluate_new_event(db, event)
+
+                # Create FusionResult for ship_collision and tunnel_anomaly events
+                from app.models.fusion_result import FusionResult
+                for event, det_result in zip(created_events, results):
+                    if det_result.event_type in ("ship_collision", "tunnel_anomaly"):
+                        fusion = FusionResult(
+                            fusion_id=IDGenerator.generate_unique("FUS"),
+                            object_id=event.object_id,
+                            related_event_id=event.event_id,
+                            fusion_type=det_result.event_type,
+                            score=round(det_result.confidence * 100, 1),
+                            risk_level=det_result.risk_level,
+                            rule_desc=det_result.result_desc,
+                            fusion_time=datetime.utcnow(),
+                        )
+                        db.add(fusion)
 
             # Update task status
             db_task = await db.get(InferenceTask, task.task_id)

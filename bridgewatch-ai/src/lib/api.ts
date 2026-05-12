@@ -358,3 +358,23 @@ export function login(username: string, password: string) {
 export function getMe() {
   return apiClient<CurrentUser>("/auth/me");
 }
+
+// --- Monitoring API ---
+
+export interface MonitoringPoint {
+  data_id: number;
+  object_id: string;
+  data_type: string;
+  data_value: number;
+  data_time: string;
+}
+
+export function getMonitoringData(params: {
+  object_id: string;
+  data_types?: string;
+  start_time?: string;
+  end_time?: string;
+  limit?: number;
+}) {
+  return apiClient<MonitoringPoint[]>(`/monitoring${buildQuery(params)}`);
+}

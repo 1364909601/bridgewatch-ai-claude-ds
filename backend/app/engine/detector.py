@@ -144,21 +144,65 @@ class FireDetector(BaseDetector):
     ]
 
 
+class ShipCollisionDetector(BaseDetector):
+    """Ship collision risk detection (large bridges with AIS/SHM monitoring)."""
+    event_type = "ship_collision"
+    base_prob = 0.20
+    scene_modifiers = {"rain_fog": 0.10, "night": 0.08}
+    duration_threshold = 600        # longer observation needed
+    time_region = "middle"
+    conf_mean = 0.70
+    descriptions = [
+        "检测到船舶偏航，AIS 轨迹接近桥墩保护区",
+        "通航净空低于安全阈值，船舶与桥墩距离偏小",
+        "AIS 与视频融合分析显示船舶存在碰撞风险",
+        "检测到桥区水域异常目标接近，船撞风险升高",
+    ]
+
+
+class TunnelAnomalyDetector(BaseDetector):
+    """Tunnel environment anomaly detection (CO, visibility, traffic)."""
+    event_type = "tunnel_anomaly"
+    base_prob = 0.30
+    scene_modifiers = {"night": 0.08, "rain_fog": 0.10}
+    duration_threshold = 120
+    time_region = "any"
+    conf_mean = 0.75
+    descriptions = [
+        "隧道内 CO 浓度异常升高，通风系统需关注",
+        "检测到隧道内能见度下降，照度低于安全阈值",
+        "隧道交通流量异常波动，可能存在拥堵风险",
+        "环境监测数据异常：CO 与照度同时偏离基线",
+    ]
+
+
 # ---------------------------------------------------------------------------
 # Pipeline
 # ---------------------------------------------------------------------------
 
 def run_detection_pipeline(video: VideoInfo, object_info: ObjectInfo) -> list[DetectionResult]:
     """
-    Run all four ordinary-bridge detectors on a video and return
+    Run detectors appropriate for the object type and return
     all (non-None) results sorted by start_second.
+
+    - Bridges (ordinary): collapse, deformation, congestion, fire (+ ship_collision for large bridges)
+    - Tunnels: tunnel_anomaly
     """
-    detectors = [
+    detectors: list[BaseDetector] = [
         CollapseDetector(),
         DeformationDetector(),
         CongestionDetector(),
         FireDetector(),
     ]
+
+    # Add ship collision for bridge-type objects
+    if object_info and object_info.object_type == "bridge":
+        detectors.append(ShipCollisionDetector())
+
+    # Replace with tunnel detector for tunnel-type objects
+    if object_info and object_info.object_type == "tunnel":
+        detectors = [TunnelAnomalyDetector()]
+
     results: list[DetectionResult] = []
     for det in detectors:
         try:
