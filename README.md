@@ -9,45 +9,47 @@
 ## 项目结构
 
 ```
-├── bridgewatch-ai/          # 前端 — React 19 + Vite + TypeScript + Tailwind v4
+├── bridgewatch-ai/              # 前端 — React 19 + Vite + TypeScript + Tailwind v4
 │   ├── src/
-│   │   ├── pages/           # 7 个业务页面（总览/事件中心/视频回放/普通桥梁/船撞融合/隧道/模型运维）
-│   │   ├── components/      # 6 个通用组件（PageNav/StatusPill/Panel/MetricCard/EventTable/PlaybackFrame）
-│   │   ├── hooks/           # React Query hooks（5 个领域模块）
-│   │   ├── lib/             # API 客户端 + 类型映射器 + Gemini 摘要
-│   │   └── data/            # Mock 数据（离线回退）
-│   └── ...
-├── backend/                 # 后端 — FastAPI (Python) + SQLAlchemy async + PostgreSQL
+│   │   ├── pages/               # 7 个业务页面
+│   │   ├── components/          # 8 个通用组件（含 AlertBell）
+│   │   ├── hooks/               # React Query hooks（8 个领域模块）
+│   │   ├── contexts/            # AuthContext（JWT 认证状态管理）
+│   │   ├── lib/                 # API 客户端 + 类型映射器 + auth 工具
+│   │   └── data/                # Mock 数据（离线回退）
+│   └── Dockerfile               # 多阶段构建（node build → nginx serve）
+├── backend/                     # 后端 — FastAPI + SQLAlchemy async + PostgreSQL/SQLite
 │   ├── app/
-│   │   ├── api/             # 16 个 RESTful API 端点
-│   │   ├── models/          # 8 张表的 ORM 模型
-│   │   ├── services/        # 业务逻辑层（预留）
-│   │   ├── middleware/      # 日志 + 鉴权中间件
-│   │   ├── utils/           # 响应格式/异常/分页/枚举/ID 生成
-│   │   └── seed/            # 种子数据脚本
-│   ├── alembic/             # 数据库迁移
-│   ├── Dockerfile           # 多阶段构建
-│   └── docker-compose.yml   # PostgreSQL + Redis + 后端编排
-├── reference source/        # 技术补充文档（接口/数据库/算法/告警/权限/工时/安全）
+│   │   ├── api/                 # 20+ RESTful API 端点
+│   │   ├── models/              # 9 张表的 ORM 模型
+│   │   ├── services/            # 业务逻辑层（9 个 Service）
+│   │   ├── engine/              # 检测推理引擎（6 个检测器 + Worker）
+│   │   ├── middleware/          # 日志 + JWT 鉴权 + Prometheus 中间件
+│   │   ├── monitoring/          # Prometheus 指标注册
+│   │   ├── utils/               # 响应格式/异常/分页/ID 生成
+│   │   └── seed/                # 种子数据脚本
+│   ├── tests/                   # pytest 测试（13 个用例）
+│   ├── alembic/
+│   ├── Dockerfile
+│   └── docker-compose.yml       # PostgreSQL + Redis + 后端 + 前端 + Prometheus + Grafana
+├── nginx/                       # Nginx 反向代理配置
+├── prometheus/                  # Prometheus 抓取配置
 ├── 桥梁与隧道重大风险智能识别_PRD.md
-├── 研发任务拆解表.md
-└── 项目计划开发文档.md / 待开发模块文档.md
+└── 项目计划开发文档.md
 ```
 
 ---
 
 ## 当前进展
 
-| 阶段 | 状态 |
-|------|------|
-| Phase 1 — 前端演示版 | ✅ 完成（7 页面 + 6 组件 + 深色驾驶舱 UI） |
-| Phase 2 — 后端 MVP | ✅ 完成（16 API + 8 ORM 模型 + 种子数据 + Docker） |
-| Phase 3 — 前后端联调 | ✅ 完成（SQLite 开发模式，API 全链路验证） |
-| Phase 4 — 算法推理管线 | ❌ 待开始 |
-| Phase 5 — 告警/权限/融合 | ❌ 待开始 |
-| Phase 6 — 上线交付 | ❌ 待开始 |
-
-## 技术栈
+| 阶段 | 状态 | 核心内容 |
+|------|------|----------|
+| Phase 1 — 前端演示版 | ✅ 完成 | 7 页面 + 8 组件 + 深色驾驶舱 UI |
+| Phase 2 — 后端 MVP | ✅ 完成 | 20+ API + 9 ORM 模型 + DB 迁移 + Docker |
+| Phase 3 — 前后端联调 | ✅ 完成 | SQLite 开发模式，OverviewPage/EventCenter 数据对接 |
+| Phase 4 — 算法推理管线 | ✅ 完成 | 四类桥梁 + 船撞 + 隧道检测引擎 + 告警通知闭环 |
+| Phase 5 — 用户权限 | ✅ 完成 | JWT 认证 + 3 角色（admin/operator/viewer）+ 登录页 |
+| Phase 6 — 上线交付 | 🔄 75% | Nginx + Docker 编排 + Prometheus/Grafana + pytest
 
 | 层 | 技术 |
 |------|------|
@@ -59,7 +61,10 @@
 | 后端框架 | FastAPI (Python 3.13) |
 | ORM | SQLAlchemy 2.0 async |
 | 数据库 | PostgreSQL 16（生产）/ SQLite（开发） |
-| 部署 | Docker + docker-compose |
+| 认证 | JWT (python-jose) + bcrypt |
+| 监控 | Prometheus + Grafana |
+| CI/测试 | pytest + GitHub Actions |
+| 部署 | Docker + docker-compose + Nginx |
 
 ---
 
