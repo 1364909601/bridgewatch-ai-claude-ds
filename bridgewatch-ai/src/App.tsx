@@ -12,7 +12,7 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { startTransition, useEffect, useState } from "react";
+import { startTransition, useEffect, useMemo, useState } from "react";
 import { QueryProvider } from "./lib/query-provider";
 import { generateOperationsDigest } from "./lib/gemini";
 import {
@@ -41,7 +41,6 @@ import { LoginPage } from "./pages/LoginPage";
 function AppInner() {
   const { isLoggedIn, user, logout } = useAuth();
   const [activePage, setActivePage] = useState<PageId>("overview");
-  const [activePage, setActivePage] = useState<PageId>("overview");
   const [selectedEventId, setSelectedEventId] = useState(mockEvents[0].id);
   const [digest, setDigest] = useState<OperationsDigest>({
     headline: "当前系统运行正常",
@@ -56,12 +55,12 @@ function AppInner() {
   const { data: eventListData, isLoading: eventsLoading, isError: eventsError } = useEventList();
 
   // Determine whether to use backend or mock data
-  const events: EventRecord[] = (() => {
+  const events: EventRecord[] = useMemo(() => {
     if (useBackend && eventListData?.list) {
       return mapEventsApiToRecords(eventListData.list);
     }
     return mockEvents;
-  })();
+  }, [useBackend, eventListData]);
 
   // If backend is available, switch to it
   useEffect(() => {
@@ -73,12 +72,12 @@ function AppInner() {
   // Fetch selected event detail from API if using backend
   const { data: eventDetailData } = useEventDetail(useBackend ? selectedEventId : null);
 
-  const selectedEvent: EventRecord = (() => {
+  const selectedEvent: EventRecord = useMemo(() => {
     if (useBackend && eventDetailData) {
       return mapEventsApiToRecords([eventDetailData])[0];
     }
     return events.find((event) => event.id === selectedEventId) ?? events[0];
-  })();
+  }, [useBackend, eventDetailData, events, selectedEventId]);
 
   const reviewMutation = useReviewEvent();
 
@@ -86,7 +85,10 @@ function AppInner() {
     reviewMutation.mutate({ eventId, review_status, review_remark });
   };
 
-  const activeNav = navItems.find((item) => item.id === activePage) ?? navItems[0];
+  const activeNav = useMemo(
+    () => navItems.find((item) => item.id === activePage) ?? navItems[0],
+    [activePage],
+  );
 
   useEffect(() => {
     let active = true;
