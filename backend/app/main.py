@@ -9,6 +9,7 @@ from app.config import settings
 from app.database import engine, Base
 from app.utils.exceptions import register_exception_handlers
 from app.middleware.logging_mw import LoggingMiddleware
+from app.middleware.prometheus_mw import PrometheusMiddleware
 from app.api.router import api_router
 from app.engine.worker import InferenceWorker
 
@@ -92,6 +93,7 @@ app.add_middleware(
 )
 
 # Custom middleware
+app.add_middleware(PrometheusMiddleware)
 app.add_middleware(LoggingMiddleware)
 
 # Exception handlers
