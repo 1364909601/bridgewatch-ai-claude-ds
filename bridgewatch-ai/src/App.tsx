@@ -31,6 +31,8 @@ import { ModelOpsPage } from "./pages/ModelOpsPage";
 import { OrdinaryBridgePage } from "./pages/OrdinaryBridgePage";
 import { OverviewPage } from "./pages/OverviewPage";
 import { PlaybackPage } from "./pages/PlaybackPage";
+import { ReportsPage } from "./pages/ReportsPage";
+import { SettingsPage } from "./pages/SettingsPage";
 import { TunnelPage } from "./pages/TunnelPage";
 import { PageNav } from "./components/PageNav";
 import { StatusPill } from "./components/StatusPill";
@@ -147,6 +149,10 @@ function AppInner() {
         return <TunnelPage />;
       case "ops":
         return <ModelOpsPage />;
+      case "reports":
+        return <ReportsPage />;
+      case "settings":
+        return <SettingsPage />;
       default:
         return null;
     }

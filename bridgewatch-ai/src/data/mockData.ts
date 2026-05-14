@@ -21,7 +21,9 @@ export const navItems: NavItem[] = [
   { id: "playback", label: "视频回放", eyebrow: "Playback" },
   { id: "ship", label: "船撞融合", eyebrow: "Ship Fusion" },
   { id: "tunnel", label: "隧道专题", eyebrow: "Tunnel" },
-  { id: "ops", label: "模型运维", eyebrow: "Model Ops" }
+  { id: "ops", label: "模型运维", eyebrow: "Model Ops" },
+  { id: "reports", label: "报告中心", eyebrow: "Reports" },
+  { id: "settings", label: "系统设置", eyebrow: "Settings" }
 ];
 
 export const overviewMetrics: DashboardMetric[] = [
@@ -234,7 +236,9 @@ export const pageObjectives: Record<PageId, string> = {
   ordinary: "展示普通桥梁四类风险模型的能力、场景差异与典型案例。",
   ship: "联动视频、AIS 与 SHM 指标，呈现船撞融合预警链路。",
   tunnel: "结合视频与环境监测数据，演示隧道异常识别与联动判断。",
-  ops: "查看模型版本、推理任务与工程运行健康度。"
+  ops: "查看模型版本、推理任务与工程运行健康度。",
+  reports: "生成和导出系统运行报告、事件统计报表。",
+  settings: "管理系统配置、用户权限与系统参数。"
 };
 
 export const pageHighlights: Record<PageId, string[]> = {
@@ -244,5 +248,7 @@ export const pageHighlights: Record<PageId, string[]> = {
   ordinary: ["普通桥梁四类事件已具备演示闭环。", "夜间和雨雾场景仍是重点优化方向。", "车辆积压识别稳定性最高。"],
   ship: ["船舶接近保护区时需联动 AIS、视频与 SHM 曲线。", "当前原型强调可解释融合评分。", "页面重点展示船撞预警链路。"],
   tunnel: ["隧道异常以空气质量、照度和交通流为主。", "视频与监测数据共同支撑风险判断。", "专题页保留异常案例与趋势曲线。"],
-  ops: ["普通桥梁模型已在线运行。", "船撞与隧道模型处于原型验证阶段。", "失败任务需要快速重试或人工介入。"]
+  ops: ["普通桥梁模型已在线运行。", "船撞与隧道模型处于原型验证阶段。", "失败任务需要快速重试或人工介入。"],
+  reports: ["报告中心提供事件统计、风险趋势和系统运行报告。", "支持数据导出和定期报告生成。", "可按时间范围和事件类型筛选。"],
+  settings: ["管理系统用户和角色权限。", "配置系统运行参数和告警规则。", "查看系统日志和操作审计。"]
 };

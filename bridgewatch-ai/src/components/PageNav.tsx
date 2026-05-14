@@ -26,7 +26,9 @@ const icons: Record<PageId, typeof Activity> = {
   ordinary: Activity,
   ship: Ship,
   tunnel: Cable,
-  ops: Settings
+  ops: Settings,
+  reports: Database,
+  settings: FileText,
 };
 
 export function PageNav({ items, activeId, onNavigate, compact = false }: PageNavProps) {
@@ -49,18 +51,6 @@ export function PageNav({ items, activeId, onNavigate, compact = false }: PageNa
           </button>
         );
       })}
-      {!compact ? (
-        <div className="mt-3 border-t border-slate-700/60 pt-3">
-          <button type="button" className="nav-button">
-            <Database size={16} strokeWidth={1.8} />
-            <span>报告中心</span>
-          </button>
-          <button type="button" className="nav-button">
-            <FileText size={16} strokeWidth={1.8} />
-            <span>系统设置</span>
-          </button>
-        </div>
-      ) : null}
     </nav>
   );
 }

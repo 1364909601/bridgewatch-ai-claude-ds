@@ -5,7 +5,9 @@
   | "ordinary"
   | "ship"
   | "tunnel"
-  | "ops";
+  | "ops"
+  | "reports"
+  | "settings";
 
 export type ObjectType = "普通桥梁" | "长大桥梁" | "隧道";
 export type RiskLevel = "高" | "中" | "低";
