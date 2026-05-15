@@ -16,11 +16,13 @@ backend/bridgewatch.db
 backend/.env
 backend/data/files/
 backend/*.db
+backend/.pytest_cache/
 
 # --- Node / Frontend ---
 bridgewatch-ai/node_modules/
 bridgewatch-ai/dist/
 bridgewatch-ai/.vite/
+*.tsbuildinfo
 
 # --- IDE ---
 .idea/
@@ -36,3 +38,6 @@ Thumbs.db
 # --- Environment ---
 .env.local
 .env.production
+
+# --- Local assistant config ---
+.claude/
