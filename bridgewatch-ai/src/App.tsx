@@ -12,7 +12,18 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { startTransition, useEffect, useMemo, useState } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState } from "react";
+
+function useCurrentTime() {
+  const [time, setTime] = useState(() => new Date().toLocaleString("zh-CN", { hour12: false }));
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(new Date().toLocaleString("zh-CN", { hour12: false }));
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
 import { QueryProvider } from "./lib/query-provider";
 import { generateOperationsDigest } from "./lib/gemini";
 import {
@@ -42,6 +53,7 @@ import { LoginPage } from "./pages/LoginPage";
 
 function AppInner() {
   const { isLoggedIn, user, logout } = useAuth();
+  const currentTime = useCurrentTime();
   const [activePage, setActivePage] = useState<PageId>("overview");
   const [selectedEventId, setSelectedEventId] = useState(mockEvents[0].id);
   const [digest, setDigest] = useState<OperationsDigest>({
@@ -207,7 +219,7 @@ function AppInner() {
             </div>
           </div>
           <div className="top-actions">
-            <span className="timestamp">2025-05-30 14:32:18</span>
+            <span className="timestamp">{currentTime}</span>
             <AlertBell />
             <button className="icon-button" type="button" title="刷新">
               <RefreshCw size={16} />
