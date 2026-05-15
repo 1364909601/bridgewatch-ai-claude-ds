@@ -80,9 +80,29 @@ services:
       - grafana_data:/var/lib/grafana
     depends_on:
       - prometheus
+      - loki
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    command:
+      - "-config.file=/etc/loki/local-config.yaml"
+      - "-auth.enabled=false"
+    volumes:
+      - loki_data:/loki
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ../promtail/promtail.yml:/etc/promtail/promtail.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - "-config.file=/etc/promtail/promtail.yml"
 
 volumes:
   pgdata:
   filedata:
   prometheus_data:
   grafana_data:
+  loki_data:
