@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import engine, Base
+from app.models import *  # noqa: F401 — register all ORM models before create_all
 from app.utils.exceptions import register_exception_handlers
 from app.middleware.logging_mw import LoggingMiddleware
 from app.middleware.prometheus_mw import PrometheusMiddleware
