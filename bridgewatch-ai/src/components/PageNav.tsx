@@ -29,6 +29,7 @@ const icons: Record<PageId, typeof Activity> = {
   ops: Settings,
   reports: Database,
   settings: FileText,
+  audit: Activity,
 };
 
 export function PageNav({ items, activeId, onNavigate, compact = false }: PageNavProps) {

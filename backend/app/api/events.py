@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
 from app.database import get_db
+from app.middleware.auth import get_current_user
 from app.schemas.events import (
     EventQueryParams,
     EventResponse,
@@ -10,6 +11,7 @@ from app.schemas.events import (
     EventReviewRequest,
     EventReviewResponse,
 )
+from app.services.audit_service import AuditService
 from app.services.event_service import EventService
 from app.utils.response import success_response
 from app.utils.pagination import PaginatedResponse, paginated_response
@@ -65,6 +67,7 @@ async def review_event(
     event_id: str,
     body: EventReviewRequest,
     db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
 ):
     """复核事件"""
     result = await EventService.review_event(
@@ -72,4 +75,14 @@ async def review_event(
         review_status=body.review_status,
         review_remark=body.review_remark,
     )
+    # Audit log
+    action = "复核通过" if body.review_status == "reviewed" else "撤销复核"
+    await AuditService.record(
+        db, log_type="event_review",
+        log_content=f"用户 {current_user['username']} {action} 事件 {event_id}",
+        user_id=current_user["user_id"],
+        operator_name=current_user["display_name"],
+        related_id=event_id,
+    )
+    await db.commit()
     return success_response(result)

@@ -23,7 +23,8 @@ export const navItems: NavItem[] = [
   { id: "tunnel", label: "隧道专题", eyebrow: "Tunnel" },
   { id: "ops", label: "模型运维", eyebrow: "Model Ops" },
   { id: "reports", label: "报告中心", eyebrow: "Reports" },
-  { id: "settings", label: "系统设置", eyebrow: "Settings" }
+  { id: "settings", label: "系统设置", eyebrow: "Settings" },
+  { id: "audit", label: "审计日志", eyebrow: "Audit" }
 ];
 
 export const overviewMetrics: DashboardMetric[] = [
@@ -238,7 +239,8 @@ export const pageObjectives: Record<PageId, string> = {
   tunnel: "结合视频与环境监测数据，演示隧道异常识别与联动判断。",
   ops: "查看模型版本、推理任务与工程运行健康度。",
   reports: "生成和导出系统运行报告、事件统计报表。",
-  settings: "管理系统配置、用户权限与系统参数。"
+  settings: "管理系统配置、用户权限与系统参数。",
+  audit: "查看系统操作审计日志，追踪关键操作记录。"
 };
 
 export const pageHighlights: Record<PageId, string[]> = {
@@ -250,5 +252,6 @@ export const pageHighlights: Record<PageId, string[]> = {
   tunnel: ["隧道异常以空气质量、照度和交通流为主。", "视频与监测数据共同支撑风险判断。", "专题页保留异常案例与趋势曲线。"],
   ops: ["普通桥梁模型已在线运行。", "船撞与隧道模型处于原型验证阶段。", "失败任务需要快速重试或人工介入。"],
   reports: ["报告中心提供事件统计、风险趋势和系统运行报告。", "支持数据导出和定期报告生成。", "可按时间范围和事件类型筛选。"],
-  settings: ["管理系统用户和角色权限。", "配置系统运行参数和告警规则。", "查看系统日志和操作审计。"]
+  settings: ["管理系统用户和角色权限。", "配置系统运行参数和告警规则。", "查看系统日志和操作审计。"],
+  audit: ["查看系统操作审计日志。", "按类型和时间筛选审计记录。", "追踪关键操作的用户和详情。"]
 };

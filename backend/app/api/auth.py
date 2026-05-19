@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.middleware.auth import get_current_user
 from app.schemas.auth import LoginRequest
+from app.services.audit_service import AuditService
 from app.services.auth_service import AuthService
 from app.utils.exceptions import UnauthorizedException
 from app.utils.response import success_response
@@ -30,6 +31,14 @@ async def login(
         "username": user.username,
         "role": user.role,
     })
+
+    # Audit log
+    await AuditService.record(
+        db, log_type="login",
+        log_content=f"用户 {user.username}({user.display_name}) 登录系统",
+        user_id=user.user_id, operator_name=user.display_name,
+    )
+    await db.commit()
 
     return success_response({
         "access_token": token,

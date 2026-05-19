@@ -396,6 +396,28 @@ export function deleteUser(userId: string) {
   });
 }
 
+// --- Audit API ---
+
+export interface AuditLogItem {
+  log_id: number;
+  log_type: string;
+  log_level: string;
+  log_content?: string;
+  user_id?: string;
+  operator_name?: string;
+  related_id?: string;
+  created_time?: string;
+}
+
+export function getAuditLogs(params?: {
+  page_no?: number;
+  page_size?: number;
+  log_type?: string;
+  log_level?: string;
+}) {
+  return apiClient<{ total: number; list: AuditLogItem[] }>(`/audit${buildQuery(params || {})}`);
+}
+
 // --- Monitoring API ---
 
 export interface MonitoringPoint {

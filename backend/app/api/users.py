@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.middleware.auth import get_current_user, require_role
+from app.services.audit_service import AuditService
 from app.models.user import User
 from app.schemas.users import CreateUserRequest, UpdateUserRequest
 from app.services.auth_service import AuthService
@@ -76,6 +77,13 @@ async def create_user(
         is_active=True,
     )
     db.add(user)
+    await db.flush()
+    await AuditService.record(
+        db, log_type="user_mgmt",
+        log_content=f"管理员 {current_user['username']} 创建用户 {body.username} (角色: {body.role})",
+        user_id=current_user["user_id"], operator_name=current_user["display_name"],
+        related_id=user.user_id,
+    )
     await db.commit()
     await db.refresh(user)
     return success_response(AuthService.user_to_dict(user))
@@ -109,6 +117,13 @@ async def update_user(
     if body.is_active is not None:
         user.is_active = body.is_active
 
+    await db.flush()
+    await AuditService.record(
+        db, log_type="user_mgmt",
+        log_content=f"管理员 {current_user['username']} 更新用户 {user.username}",
+        user_id=current_user["user_id"], operator_name=current_user["display_name"],
+        related_id=user_id,
+    )
     await db.commit()
     await db.refresh(user)
     return success_response(AuthService.user_to_dict(user))
@@ -127,5 +142,12 @@ async def delete_user(
     if not user:
         raise NotFoundException(f"用户 {user_id} 不存在")
     await db.delete(user)
+    await db.flush()
+    await AuditService.record(
+        db, log_type="user_mgmt",
+        log_content=f"管理员 {current_user['username']} 删除用户 {user.username} (ID: {user_id})",
+        user_id=current_user["user_id"], operator_name=current_user["display_name"],
+        related_id=user_id,
+    )
     await db.commit()
     return success_response({"deleted": user_id})

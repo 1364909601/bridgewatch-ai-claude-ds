@@ -44,6 +44,7 @@ import { OverviewPage } from "./pages/OverviewPage";
 import { PlaybackPage } from "./pages/PlaybackPage";
 import { ReportsPage } from "./pages/ReportsPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { AuditLogPage } from "./pages/AuditLogPage";
 import { TunnelPage } from "./pages/TunnelPage";
 import { PageNav } from "./components/PageNav";
 import { StatusPill } from "./components/StatusPill";
@@ -165,6 +166,8 @@ function AppInner() {
         return <ReportsPage />;
       case "settings":
         return <SettingsPage />;
+      case "audit":
+        return <AuditLogPage />;
       default:
         return null;
     }
