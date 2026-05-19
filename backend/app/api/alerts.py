@@ -42,7 +42,7 @@ async def unread_alert_count(
     db: AsyncSession = Depends(get_db),
 ):
     """获取未读告警数量"""
-    data = await AlertService.get_unread_count(db)
+    data = await AlertService.get_active_count(db)
     return success_response(data)
 
 

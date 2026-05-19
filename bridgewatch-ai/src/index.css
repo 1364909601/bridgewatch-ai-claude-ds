@@ -919,6 +919,16 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-title-row {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+
 /* ── Animation utilities ──────────────────────────────────────── */
 
 @keyframes pulse-soft {
@@ -955,14 +965,4 @@ button {
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
-}
-
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .page-title-row {
-    flex-direction: column;
-    align-items: start;
-  }
 }

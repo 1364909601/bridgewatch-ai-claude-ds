@@ -5,6 +5,8 @@
  * All functions return typed promises.
  */
 
+import { getToken } from "./auth";
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api";
 
 // --- Response types from backend ---

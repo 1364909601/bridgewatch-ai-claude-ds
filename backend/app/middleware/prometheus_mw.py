@@ -22,12 +22,13 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
         endpoint = request.scope.get("path", "/unknown")
 
         start = time.monotonic()
+        response: Response | None = None
         try:
             response = await call_next(request)
             return response
         finally:
             duration = time.monotonic() - start
-            status_code = response.status_code if "response" in dir() else 500
+            status_code = response.status_code if response is not None else 500
 
             HTTP_REQUESTS_TOTAL.labels(
                 method=method, endpoint=endpoint, status=str(status_code)

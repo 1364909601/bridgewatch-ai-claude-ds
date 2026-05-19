@@ -2,7 +2,7 @@
 Service layer for Dicts (数据字典).
 """
 
-from fastapi import HTTPException
+from app.utils.exceptions import NotFoundException
 
 
 # Static dictionary data (no DB table yet — can be moved to DB later)
@@ -53,5 +53,5 @@ class DictService:
     def get_dict(dict_type: str) -> list[dict]:
         """Get dictionary items by type."""
         if dict_type not in _DICT_DATA:
-            raise HTTPException(status_code=404, detail=f"字典类型 '{dict_type}' 不存在")
+            raise NotFoundException(detail=f"字典类型 '{dict_type}' 不存在")
         return _DICT_DATA[dict_type]

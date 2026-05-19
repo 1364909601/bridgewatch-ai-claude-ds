@@ -171,8 +171,8 @@ class AlertService:
     # ── CRUD ──────────────────────────────────────────────────────────
 
     @staticmethod
-    async def get_unread_count(db: AsyncSession) -> dict:
-        """Get count of unread alerts."""
+    async def get_active_count(db: AsyncSession) -> dict:
+        """Get count of active (unacknowledged) alerts — includes both unread and read statuses."""
         result = await db.execute(
             select(func.count()).select_from(AlertRecord).where(
                 AlertRecord.status.in_(["unread", "read"])
