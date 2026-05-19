@@ -361,6 +361,41 @@ export function getMe() {
   return apiClient<CurrentUser>("/auth/me");
 }
 
+// --- Users API ---
+
+export interface UserItem {
+  user_id: string;
+  username: string;
+  display_name: string;
+  role: string;
+  is_active: boolean;
+  created_time?: string;
+}
+
+export function getUsers() {
+  return apiClient<{ total: number; list: UserItem[] }>("/users");
+}
+
+export function createUser(data: { username: string; password: string; display_name: string; role: string }) {
+  return apiClient<UserItem>("/users", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateUser(userId: string, data: Record<string, unknown>) {
+  return apiClient<UserItem>(`/users/${userId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteUser(userId: string) {
+  return apiClient<{ deleted: string }>(`/users/${userId}`, {
+    method: "DELETE",
+  });
+}
+
 // --- Monitoring API ---
 
 export interface MonitoringPoint {

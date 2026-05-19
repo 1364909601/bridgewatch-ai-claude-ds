@@ -1,37 +1,160 @@
-import { ShieldCheck, User, Bell, Sliders } from "lucide-react";
+import { useState } from "react";
+import { Loader2, Plus, ShieldCheck, Trash2, User } from "lucide-react";
 import { Panel } from "../components/Panel";
 import { StatusPill } from "../components/StatusPill";
+import { useCreateUser, useDeleteUser, useUpdateUser, useUserList } from "../hooks/use-users";
 
 export function SettingsPage() {
+  const { data: usersData, isLoading } = useUserList();
+  const createMutation = useCreateUser();
+  const updateMutation = useUpdateUser();
+  const deleteMutation = useDeleteUser();
+
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ username: "", password: "", display_name: "", role: "viewer" });
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const users = usersData?.list ?? [];
+
+  const handleCreate = () => {
+    createMutation.mutate(form, {
+      onSuccess: () => {
+        setShowForm(false);
+        setForm({ username: "", password: "", display_name: "", role: "viewer" });
+      },
+    });
+  };
+
+  const handleToggleActive = (userId: string, current: boolean) => {
+    updateMutation.mutate({ user_id: userId, updates: { is_active: !current } });
+  };
+
+  const handleDelete = (userId: string) => {
+    if (confirm("确定要删除该用户吗？")) {
+      deleteMutation.mutate(userId);
+    }
+  };
+
+  const pending =
+    createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
+
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        <Panel title="用户管理" eyebrow="User Management">
-          <div className="space-y-3">
-            {[
-              { name: "系统管理员", role: "admin", status: "在线" as const },
-              { name: "值班操作员", role: "operator", status: "在线" as const },
-              { name: "观察员", role: "viewer", status: "离线" as const },
-            ].map((u) => (
+      <Panel title="用户管理" eyebrow="User Management">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="text-sm text-slate-400">共 {users.length} 个用户</div>
+          <button
+            type="button"
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center gap-2 rounded-full border border-slate-600 bg-slate-800/60 px-4 py-2 text-sm text-slate-200 transition hover:border-slate-400"
+          >
+            <Plus size={16} />
+            添加用户
+          </button>
+        </div>
+
+        {/* Create / Edit form */}
+        {showForm && (
+          <div className="mb-4 rounded-2xl border border-slate-700/50 bg-slate-900/50 p-4">
+            <div className="grid gap-3 md:grid-cols-5">
+              <input
+                value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
+                placeholder="用户名"
+                className="rounded-xl border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-white outline-none"
+              />
+              <input
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                placeholder="密码"
+                type="password"
+                className="rounded-xl border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-white outline-none"
+              />
+              <input
+                value={form.display_name}
+                onChange={(e) => setForm({ ...form, display_name: e.target.value })}
+                placeholder="显示名称"
+                className="rounded-xl border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-white outline-none"
+              />
+              <select
+                value={form.role}
+                onChange={(e) => setForm({ ...form, role: e.target.value })}
+                className="rounded-xl border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-white outline-none"
+              >
+                <option value="viewer">观察员</option>
+                <option value="operator">操作员</option>
+                <option value="admin">管理员</option>
+              </select>
+              <button
+                type="button"
+                disabled={pending || !form.username || !form.password}
+                onClick={handleCreate}
+                className="rounded-xl bg-brass px-3 py-2 text-sm font-medium text-paper transition hover:bg-brass/90 disabled:opacity-50"
+              >
+                {createMutation.isPending ? "创建中..." : "创建"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* User list */}
+        {isLoading ? (
+          <div className="py-8 text-center text-sm text-slate-500">加载中...</div>
+        ) : (
+          <div className="space-y-2">
+            {users.map((u) => (
               <div
-                key={u.name}
-                className="flex items-center justify-between rounded-xl border border-slate-700/40 bg-slate-900/30 px-4 py-3"
+                key={u.user_id}
+                className="flex items-center justify-between rounded-xl border border-slate-700/40 bg-slate-900/30 px-4 py-3 transition hover:bg-slate-800/40"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brass/20">
                     <User size={18} className="text-brass" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-slate-200">{u.name}</div>
-                    <div className="text-xs text-slate-500">{u.role}</div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-slate-200">{u.display_name || u.username}</span>
+                      <span className="text-xs text-slate-500">@{u.username}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <span>{u.role}</span>
+                    </div>
                   </div>
                 </div>
-                <StatusPill tone={u.status === "在线" ? "ok" : "neutral"}>{u.status}</StatusPill>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleToggleActive(u.user_id, u.is_active)}
+                    disabled={pending}
+                    className="text-xs"
+                  >
+                    <StatusPill tone={u.is_active ? "ok" : "neutral"}>
+                      {u.is_active ? "启用" : "禁用"}
+                    </StatusPill>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={pending}
+                    onClick={() => handleDelete(u.user_id)}
+                    className="rounded-full border border-slate-700 bg-slate-900/60 p-2 text-slate-400 transition hover:border-danger/50 hover:text-danger"
+                    title="删除"
+                  >
+                    {deleteMutation.isPending && deleteMutation.variables === u.user_id ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : (
+                      <Trash2 size={14} />
+                    )}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
-        </Panel>
+        )}
+      </Panel>
 
+      {/* ── Config section ──────────────────────────────────────── */}
+      <div className="grid gap-4 md:grid-cols-2">
         <Panel title="告警配置" eyebrow="Alert Config">
           <div className="space-y-4">
             {[
@@ -49,23 +172,23 @@ export function SettingsPage() {
             ))}
           </div>
         </Panel>
-      </div>
 
-      <Panel title="系统信息" eyebrow="System Info">
-        <div className="grid gap-4 md:grid-cols-4">
-          {[
-            { label: "系统版本", value: "v2.0.0" },
-            { label: "后端框架", value: "FastAPI" },
-            { label: "数据库", value: "SQLite / PostgreSQL" },
-            { label: "认证方式", value: "JWT + bcrypt" },
-          ].map((info) => (
-            <div key={info.label} className="rounded-xl border border-slate-700/40 bg-slate-900/30 px-4 py-3 text-center">
-              <div className="text-xs text-slate-500">{info.label}</div>
-              <div className="mt-1 text-sm font-semibold text-slate-200">{info.value}</div>
-            </div>
-          ))}
-        </div>
-      </Panel>
+        <Panel title="系统信息" eyebrow="System Info">
+          <div className="grid gap-4 md:grid-cols-2">
+            {[
+              { label: "系统版本", value: "v2.0.0" },
+              { label: "后端框架", value: "FastAPI" },
+              { label: "数据库", value: "SQLite / PostgreSQL" },
+              { label: "认证方式", value: "JWT + bcrypt" },
+            ].map((info) => (
+              <div key={info.label} className="rounded-xl border border-slate-700/40 bg-slate-900/30 px-4 py-3 text-center">
+                <div className="text-xs text-slate-500">{info.label}</div>
+                <div className="mt-1 text-sm font-semibold text-slate-200">{info.value}</div>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      </div>
     </div>
   );
 }
