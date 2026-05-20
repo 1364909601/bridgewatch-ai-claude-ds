@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.alert_record import AlertRecord
 from app.models.event_record import EventRecord
+from app.services.notification_service import NotificationService
 from app.utils.exceptions import NotFoundException, BadRequestException
 from app.utils.id_generator import IDGenerator
 from app.utils.pagination import PaginationParams
@@ -81,6 +82,15 @@ class AlertService:
             return None
         db.add(alert)
         await db.flush()
+
+        # Send email notification for critical alerts
+        if alert.severity == "critical":
+            NotificationService.send_alert_email(
+                alert_title=alert.title,
+                alert_message=alert.message or "",
+                severity=alert.severity,
+            )
+
         logger.info("Alert %s generated for event %s (severity=%s)", alert.alert_id, event.event_id, alert.severity)
         return alert
 

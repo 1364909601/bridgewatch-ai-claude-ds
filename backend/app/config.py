@@ -39,6 +39,15 @@ class Settings(BaseSettings):
     WORKER_ENABLED: bool = True
     WORKER_POLL_INTERVAL: int = 5
 
+    # SMTP (email notifications)
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_TLS: bool = True
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = "bridgewatch@example.com"
+    SMTP_RECIPIENT: str = ""
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 

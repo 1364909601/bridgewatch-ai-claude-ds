@@ -153,6 +153,73 @@ export function SettingsPage() {
         )}
       </Panel>
 
+      {/* ── Notification section ────────────────────────────────── */}
+      <Panel title="通知设置" eyebrow="Notification">
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="rounded-xl border border-slate-700/40 bg-slate-900/30 px-4 py-4">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brass/20">
+                <span className="text-sm text-brass">@</span>
+              </div>
+              <span className="text-sm font-medium text-slate-200">邮件通知</span>
+            </div>
+            <div className="mt-3 space-y-1 text-xs text-slate-500">
+              <div className="flex justify-between">
+                <span>SMTP 状态</span>
+                <StatusPill tone="neutral">未配置</StatusPill>
+              </div>
+              <div className="flex justify-between">
+                <span>告警推送</span>
+                <span className="text-slate-400">紧急告警</span>
+              </div>
+              <div className="mt-2 text-slate-500">
+                在 <code className="text-brass">.env</code> 中配置 SMTP_HOST、SMTP_USER、SMTP_PASSWORD 启用邮件通知
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-slate-700/40 bg-slate-900/30 px-4 py-4">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-signal/20">
+                <span className="text-sm text-signal">SMS</span>
+              </div>
+              <span className="text-sm font-medium text-slate-200">短信通知</span>
+            </div>
+            <div className="mt-3 space-y-1 text-xs text-slate-500">
+              <div className="flex justify-between">
+                <span>渠道状态</span>
+                <StatusPill tone="neutral">待集成</StatusPill>
+              </div>
+              <div className="mt-2">
+                短信通道可通过第三方 API 扩展（如阿里云短信、Twilio）
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-slate-700/40 bg-slate-900/30 px-4 py-4">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20">
+                <span className="text-sm text-blue-400">🔔</span>
+              </div>
+              <span className="text-sm font-medium text-slate-200">页面通知</span>
+            </div>
+            <div className="mt-3 space-y-1 text-xs text-slate-500">
+              <div className="flex justify-between">
+                <span>渠道状态</span>
+                <StatusPill tone="ok">已启用</StatusPill>
+              </div>
+              <div className="flex justify-between">
+                <span>推送范围</span>
+                <span className="text-slate-400">全部告警</span>
+              </div>
+              <div className="mt-2">
+                顶部栏 Bell 组件实时显示未读告警
+              </div>
+            </div>
+          </div>
+        </div>
+      </Panel>
+
       {/* ── Config section ──────────────────────────────────────── */}
       <div className="grid gap-4 md:grid-cols-2">
         <Panel title="告警配置" eyebrow="Alert Config">

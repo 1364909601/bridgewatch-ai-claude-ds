@@ -62,4 +62,11 @@ describe("SettingsPage", () => {
     expect(screen.getByText("告警配置")).toBeInTheDocument();
     expect(screen.getByText("系统信息")).toBeInTheDocument();
   });
+
+  it("renders notification section", () => {
+    renderWithQuery(<SettingsPage />);
+    expect(screen.getByText("通知设置")).toBeInTheDocument();
+    expect(screen.getByText("邮件通知")).toBeInTheDocument();
+    expect(screen.getByText("页面通知")).toBeInTheDocument();
+  });
 });
