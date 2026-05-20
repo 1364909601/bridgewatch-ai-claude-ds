@@ -192,7 +192,8 @@ async def seed_database() -> None:
         # Check if already seeded
         from sqlalchemy import select, func
         count_result = await session.execute(select(func.count(ObjectInfo.object_id)))
-        if count_result.scalar() and count_result.scalar() > 0:
+        existing_count = count_result.scalar() or 0
+        if existing_count > 0:
             logger.info("Database already seeded, skipping.")
             return
 

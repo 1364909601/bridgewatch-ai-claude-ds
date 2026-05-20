@@ -34,10 +34,12 @@ async def _escalation_loop():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    # Startup: create tables in dev mode
+    # Startup: create tables and run dev migrations
     if settings.DEBUG:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+        from app.utils.migration import migrate_dev_database
+        await migrate_dev_database(engine)
 
     # Start background inference worker
     worker = InferenceWorker(poll_interval=settings.WORKER_POLL_INTERVAL)
