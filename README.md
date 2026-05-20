@@ -1,3 +1,4 @@
+# This repository was built using the "Claude Code"desktop program(Module: Deepseek-v4-pro[1m]).
 # BridgeWatch AI
 
 **桥隧基础设施智能监测系统** — AI 驱动的桥梁与隧道重大风险识别平台。
