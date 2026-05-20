@@ -11,8 +11,8 @@
 ```
 ├── bridgewatch-ai/              # 前端 — React 19 + Vite + TypeScript + Tailwind v4
 │   ├── src/
-│   │   ├── pages/               # 7 个业务页面
-│   │   ├── components/          # 8 个通用组件（含 AlertBell）
+│   │   ├── pages/               # 10 个业务页面（含报告/设置/审计）
+│   │   ├── components/          # 7 个通用组件
 │   │   ├── hooks/               # React Query hooks（8 个领域模块）
 │   │   ├── contexts/            # AuthContext（JWT 认证状态管理）
 │   │   ├── lib/                 # API 客户端 + 类型映射器 + auth 工具
@@ -20,20 +20,23 @@
 │   └── Dockerfile               # 多阶段构建（node build → nginx serve）
 ├── backend/                     # 后端 — FastAPI + SQLAlchemy async + PostgreSQL/SQLite
 │   ├── app/
-│   │   ├── api/                 # 20+ RESTful API 端点
-│   │   ├── models/              # 9 张表的 ORM 模型
-│   │   ├── services/            # 业务逻辑层（9 个 Service）
-│   │   ├── engine/              # 检测推理引擎（6 个检测器 + Worker）
+│   │   ├── api/                 # 25+ RESTful API 端点
+│   │   ├── models/              # 11 张表的 ORM 模型
+│   │   ├── services/            # 业务逻辑层（12 个 Service）
+│   │   ├── engine/              # 检测推理引擎（6 检测器 + Worker + 批量推理）
+│   │   ├── ingestion/           # 数据接入管线示例
 │   │   ├── middleware/          # 日志 + JWT 鉴权 + Prometheus 中间件
 │   │   ├── monitoring/          # Prometheus 指标注册
 │   │   ├── utils/               # 响应格式/异常/分页/ID 生成
 │   │   └── seed/                # 种子数据脚本
 │   ├── tests/                   # pytest 测试（13 个用例）
-│   ├── alembic/
+│   ├── alembic/                 # 数据库迁移
+│   ├── scripts/                 # 备份恢复脚本
 │   ├── Dockerfile
 │   └── docker-compose.yml       # PostgreSQL + Redis + 后端 + 前端 + Prometheus + Grafana
-├── nginx/                       # Nginx 反向代理配置
+├── nginx/                       # Nginx 反向代理配置（HTTP + HTTPS）
 ├── prometheus/                  # Prometheus 抓取配置
+├── promtail/                    # Loki 日志采集配置
 ├── 桥梁与隧道重大风险智能识别_PRD.md
 └── 项目计划开发文档.md
 ```
@@ -62,9 +65,9 @@
 | ORM | SQLAlchemy 2.0 async |
 | 数据库 | PostgreSQL 16（生产）/ SQLite（开发） |
 | 认证 | JWT (python-jose) + bcrypt |
-| 监控 | Prometheus + Grafana |
-| CI/测试 | pytest + GitHub Actions |
-| 部署 | Docker + docker-compose + Nginx |
+| 监控 | Prometheus + Grafana + Loki |
+| CI/测试 | pytest + Vitest + GitHub Actions |
+| 部署 | Docker + docker-compose + Nginx（含 SSL） |
 
 ---
 
@@ -80,9 +83,9 @@ pip install -r requirements.txt
 cp .env.example .env   # 修改 DATABASE_URL 为 sqlite+aiosqlite:///./bridgewatch.db
 python run.py          # 启动于 localhost:8000
 
-# 种子数据（新开终端）
+# 种子数据（已内置自动创建，通常无需手动运行）
 cd backend
-python -m app.seed.seed_data
+python -m app.seed
 
 # 前端（新开终端）
 cd bridgewatch-ai
