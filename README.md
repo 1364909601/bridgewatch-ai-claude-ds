@@ -92,6 +92,23 @@ npm run dev            # 启动于 localhost:5173
 
 浏览器打开 `http://localhost:5173`，前端自动检测后端并切换到实时数据模式。
 
+### 邮件通知配置（可选）
+
+```bash
+# 编辑 backend/.env，配置 SMTP 信息后重启后端即可启用邮件通知
+SMTP_HOST=smtp.example.com       # SMTP 服务器地址
+SMTP_PORT=587                    # 端口（465/587）
+SMTP_TLS=true                    # 是否启用 TLS
+SMTP_USER=your@email.com         # 邮箱账号
+SMTP_PASSWORD=your-password      # 邮箱密码/授权码
+SMTP_FROM=bridgewatch@example.com # 发件人地址
+SMTP_RECIPIENT=admin@example.com  # 收件人地址（可选）
+```
+
+配置后系统在以下情况自动发送邮件：
+- 新增高风险事件时触发邮件告警
+- 告警超时未复核自动升级时发送通知
+
 ### 生产模式（PostgreSQL + Docker）
 
 ```bash
