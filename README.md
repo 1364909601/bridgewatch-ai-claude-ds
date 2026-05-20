@@ -49,7 +49,7 @@
 | Phase 3 — 前后端联调 | ✅ 完成 | SQLite 开发模式，OverviewPage/EventCenter 数据对接 |
 | Phase 4 — 算法推理管线 | ✅ 完成 | 四类桥梁 + 船撞 + 隧道检测引擎 + 告警通知闭环 |
 | Phase 5 — 用户权限 | ✅ 完成 | JWT 认证 + 3 角色（admin/operator/viewer）+ 登录页 |
-| Phase 6 — 上线交付 | 🔄 75% | Nginx + Docker 编排 + Prometheus/Grafana + pytest
+| Phase 6 — 上线交付 | ✅ 完成 | 全服务健康检查 + 资源限制 + SSL 配置 + 部署指南 + 运维手册
 
 | 层 | 技术 |
 |------|------|
