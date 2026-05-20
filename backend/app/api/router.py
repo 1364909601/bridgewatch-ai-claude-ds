@@ -13,6 +13,7 @@ from app.api.auth import router as auth_router
 from app.api.monitoring import router as monitoring_router
 from app.api.users import router as users_router
 from app.api.audit import router as audit_router
+from app.api.ingestion import router as ingestion_router
 from app.middleware.auth import get_current_user
 
 api_router = APIRouter()
@@ -34,6 +35,7 @@ protected_routes = [
     (monitoring_router, "/monitoring", "Monitoring"),
     (users_router, "/users", "Users"),
     (audit_router, "/audit", "Audit"),
+    (ingestion_router, "/ingestion", "Ingestion"),
 ]
 for router, prefix, tag in protected_routes:
     api_router.include_router(router, prefix=prefix, tags=[tag], dependencies=[Depends(get_current_user)])
